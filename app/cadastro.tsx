@@ -19,83 +19,36 @@ import { useRouter } from 'expo-router';
 import { cadastrarUsuario } from '../database/userService';
 import { COLORS, FONTS, SPACING, globalStyles } from '../styles/global-styles';
 
-function formatarCPF(valor: string): string {
-  const n = valor.replace(/\D/g, '').slice(0, 11);
-  return n
-    .replace(/(\d{3})(\d)/, '$1.$2')
-    .replace(/(\d{3})(\d)/, '$1.$2')
-    .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-}
-
-function formatarData(valor: string): string {
-  const n = valor.replace(/\D/g, '').slice(0, 8);
-  return n
-    .replace(/(\d{2})(\d)/, '$1/$2')
-    .replace(/(\d{2})(\d)/, '$1/$2');
-}
-
-function validarCPF(cpf: string): boolean {
-  const n = cpf.replace(/\D/g, '');
-  if (n.length !== 11) return false;
-  if (/^(\d)\1+$/.test(n)) return false;
-
-  const calc = (slice: string, peso: number) => {
-    const soma = slice.split('').reduce((acc, d, i) => acc + parseInt(d) * (peso - i), 0);
-    const resto = (soma * 10) % 11;
-    return resto >= 10 ? 0 : resto;
-  };
-
-  return calc(n.slice(0, 9), 10) === parseInt(n[9])
-      && calc(n.slice(0, 10), 11) === parseInt(n[10]);
-}
-
-function validarData(data: string): boolean {
-  if (data.length !== 10) return false;
-  const [dia, mes, ano] = data.split('/').map(Number);
-  const d = new Date(ano, mes - 1, dia);
-  return (
-    d.getFullYear() === ano &&
-    d.getMonth()    === mes - 1 &&
-    d.getDate()     === dia &&
-    ano >= 1900 &&
-    ano <= new Date().getFullYear()
-  );
+function validarEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 export default function CadastroScreen() {
   const router = useRouter();
 
-  const [nome, setNome]                     = useState('');
-  const [cpf, setCpf]                       = useState('');
-  const [dataNascimento, setDataNascimento] = useState('');
-  const [senha, setSenha]                   = useState('');
-  const [mostrarSenha, setMostrarSenha]     = useState(false);
-  const [loading, setLoading]               = useState(false);
-
-  const handleCpfChange  = (t: string) => setCpf(formatarCPF(t));
-  const handleDataChange = (t: string) => setDataNascimento(formatarData(t));
+  const [nome, setNome]                 = useState('');
+  const [email, setEmail]               = useState('');
+  const [senha, setSenha]               = useState('');
+  const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [loading, setLoading]           = useState(false);
 
   const handleCadastro = () => {
     if (!nome.trim()) {
-      Alert.alert('Atenção', 'Informe seu nome completo.');
+      Alert.alert('Atenção', 'Nome é obrigatório.');
       return;
     }
-    if (!validarCPF(cpf)) {
-      Alert.alert('CPF inválido', 'Verifique os números do CPF.');
-      return;
-    }
-    if (!validarData(dataNascimento)) {
-      Alert.alert('Data inválida', 'Informe uma data de nascimento válida.');
+    if (!validarEmail(email)) {
+      Alert.alert('Atenção', 'Formato de e-mail incorreto.');
       return;
     }
     if (senha.length < 6) {
-      Alert.alert('Senha fraca', 'A senha deve ter pelo menos 6 caracteres.');
+      Alert.alert('Atenção', 'Senha deve ter pelo menos 6 caracteres.');
       return;
     }
 
     setLoading(true);
 
-    const resultado = cadastrarUsuario({ nome, cpf, dataNascimento, senha });
+    const resultado = cadastrarUsuario({ nome, email, senha });
 
     setLoading(false);
 
@@ -105,8 +58,8 @@ export default function CadastroScreen() {
     }
 
     Alert.alert(
-      'Cadastro realizado!',
-      'Sua conta foi criada com sucesso. Faça login para continuar.',
+      'Cadastro realizado com sucesso!',
+      'Faça login para continuar.',
       [{ text: 'OK', onPress: () => router.replace('/login') }]
     );
   };
@@ -149,10 +102,15 @@ export default function CadastroScreen() {
               <View style={styles.form}>
 
                 <View style={globalStyles.inputWrapper}>
-                  <MaterialIcons name="person" size={20} color={COLORS.textMuted} style={globalStyles.inputIcon} />
+                  <MaterialIcons
+                    name="person"
+                    size={20}
+                    color={COLORS.textMuted}
+                    style={globalStyles.inputIcon}
+                  />
                   <TextInput
                     style={globalStyles.input}
-                    placeholder="Nome completo"
+                    placeholder="Nome completo *"
                     placeholderTextColor={COLORS.textMuted}
                     value={nome}
                     onChangeText={setNome}
@@ -162,36 +120,34 @@ export default function CadastroScreen() {
                 </View>
 
                 <View style={globalStyles.inputWrapper}>
-                  <MaterialIcons name="badge" size={20} color={COLORS.textMuted} style={globalStyles.inputIcon} />
+                  <MaterialIcons
+                    name="email"
+                    size={20}
+                    color={COLORS.textMuted}
+                    style={globalStyles.inputIcon}
+                  />
                   <TextInput
                     style={globalStyles.input}
-                    placeholder="CPF (000.000.000-00)"
+                    placeholder="E-mail *"
                     placeholderTextColor={COLORS.textMuted}
-                    value={cpf}
-                    onChangeText={handleCpfChange}
-                    keyboardType="number-pad"
-                    maxLength={14}
+                    value={email}
+                    onChangeText={setEmail}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
                   />
                 </View>
 
                 <View style={globalStyles.inputWrapper}>
-                  <MaterialIcons name="calendar-today" size={20} color={COLORS.textMuted} style={globalStyles.inputIcon} />
-                  <TextInput
-                    style={globalStyles.input}
-                    placeholder="Data de nascimento (DD/MM/AAAA)"
-                    placeholderTextColor={COLORS.textMuted}
-                    value={dataNascimento}
-                    onChangeText={handleDataChange}
-                    keyboardType="number-pad"
-                    maxLength={10}
+                  <MaterialIcons
+                    name="lock"
+                    size={20}
+                    color={COLORS.textMuted}
+                    style={globalStyles.inputIcon}
                   />
-                </View>
-
-                <View style={globalStyles.inputWrapper}>
-                  <MaterialIcons name="lock" size={20} color={COLORS.textMuted} style={globalStyles.inputIcon} />
                   <TextInput
                     style={globalStyles.input}
-                    placeholder="Senha (mínimo 6 caracteres)"
+                    placeholder="Senha (mínimo 6 caracteres) *"
                     placeholderTextColor={COLORS.textMuted}
                     value={senha}
                     onChangeText={setSenha}
