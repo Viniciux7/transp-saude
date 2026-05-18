@@ -20,6 +20,8 @@ interface Usuario {
 }
 
 export function cadastrarUsuario(dados: DadosCadastro): ResultadoCadastro {
+  if (!db) return { sucesso: false, erro: 'Banco de dados não disponível na web.' };
+
   try {
     db.runSync(
       `INSERT INTO users (nome, email, senha, role, createdAt) VALUES (?, ?, ?, 'citizen', ?)`,
@@ -35,6 +37,8 @@ export function cadastrarUsuario(dados: DadosCadastro): ResultadoCadastro {
 }
 
 export function buscarUsuarioPorEmail(email: string): Usuario | null {
+  if (!db) return null;
+
   const result = db.getFirstSync<Usuario>(
     `SELECT * FROM users WHERE email = ? LIMIT 1`,
     [email]
