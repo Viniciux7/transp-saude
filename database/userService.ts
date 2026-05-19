@@ -1,4 +1,4 @@
-import { db } from './db';
+import { db } from "./sqlite";
 
 type ResultadoCadastro = { sucesso: true } | { sucesso: false; erro: string };
 
@@ -20,19 +20,20 @@ interface Usuario {
 }
 
 export function cadastrarUsuario(dados: DadosCadastro): ResultadoCadastro {
-  if (!db) return { sucesso: false, erro: 'Banco de dados não disponível na web.' };
+  if (!db)
+    return { sucesso: false, erro: "Banco de dados não disponível na web." };
 
   try {
     db.runSync(
       `INSERT INTO users (nome, email, senha, role, createdAt) VALUES (?, ?, ?, 'citizen', ?)`,
-      [dados.nome, dados.email ?? '', dados.senha, new Date().toISOString()]
+      [dados.nome, dados.email ?? "", dados.senha, new Date().toISOString()],
     );
     return { sucesso: true };
   } catch (e: any) {
-    if (e?.message?.includes('UNIQUE')) {
-      return { sucesso: false, erro: 'Este e-mail já está cadastrado.' };
+    if (e?.message?.includes("UNIQUE")) {
+      return { sucesso: false, erro: "Este e-mail já está cadastrado." };
     }
-    return { sucesso: false, erro: 'Erro ao salvar cadastro.' };
+    return { sucesso: false, erro: "Erro ao salvar cadastro." };
   }
 }
 
@@ -41,7 +42,7 @@ export function buscarUsuarioPorEmail(email: string): Usuario | null {
 
   const result = db.getFirstSync<Usuario>(
     `SELECT * FROM users WHERE email = ? LIMIT 1`,
-    [email]
+    [email],
   );
   return result ?? null;
 }
