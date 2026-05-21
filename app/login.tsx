@@ -49,11 +49,7 @@ export default function LoginScreen() {
       return;
     }
 
-    if (usuario.role === 'admin') {
-      router.replace('/(admin)/painel');
-    } else {
-      router.replace('/(tabs)/home');
-    }
+    router.replace('/home');
   };
 
   return (

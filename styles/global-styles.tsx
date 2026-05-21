@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-export const colors = {
+export const COLORS = {
   oxfordNavy: "#003366",
   pearlAqua: "#A4D1CA",
   inkBlack: "#11181C",
@@ -9,9 +9,13 @@ export const colors = {
   darkBackground: "#001A33",
   accent: "#4FD1C5",
   accentDark: "#38B2AC",
+  primary: "#003366",
+  bgDark: "#001A33",
+  textMuted: "#9BA1A6",
+  textDark: "#11181C",
 };
 
-export const fonts = {
+export const FONTS = {
   sizeXS: 12,
   sizeSM: 14,
   sizeMD: 16,
@@ -24,7 +28,7 @@ export const fonts = {
   weightBold: "700" as const,
 };
 
-export const spacing = {
+export const SPACING = {
   xs: 4,
   sm: 8,
   md: 16,
@@ -33,17 +37,22 @@ export const spacing = {
   xxl: 48,
 };
 
-export const radius = {
+export const RADIUS = {
   sm: 8,
   md: 12,
   pill: 30,
 };
 
+export const colors = COLORS;
+export const fonts = FONTS;
+export const spacing = SPACING;
+export const radius = RADIUS;
+
 export const globalStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.white,
-    padding: spacing.md,
+    backgroundColor: COLORS.white,
+    padding: SPACING.md,
   },
 
   centered: {
@@ -56,99 +65,99 @@ export const globalStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "rgba(255, 255, 255, 0.12)",
-    borderRadius: radius.pill,
-    paddingHorizontal: spacing.md,
-    marginBottom: spacing.md,
+    borderRadius: RADIUS.pill,
+    paddingHorizontal: SPACING.md,
+    marginBottom: SPACING.md,
     height: 52,
   },
 
   inputIcon: {
-    marginRight: spacing.sm,
+    marginRight: SPACING.sm,
   },
 
   input: {
     flex: 1,
-    color: colors.white,
-    fontSize: fonts.sizeMD,
+    color: COLORS.white,
+    fontSize: FONTS.sizeMD,
   },
 
   buttonPrimary: {
-    backgroundColor: colors.accent,
-    borderRadius: radius.pill,
+    backgroundColor: COLORS.accent,
+    borderRadius: RADIUS.pill,
     paddingVertical: 14,
     alignItems: "center",
     width: "100%",
-    marginTop: spacing.sm,
+    marginTop: SPACING.sm,
   },
 
   buttonPrimaryText: {
-    color: colors.inkBlack,
-    fontSize: fonts.sizeMD,
-    fontWeight: fonts.weightBold,
+    color: COLORS.inkBlack,
+    fontSize: FONTS.sizeMD,
+    fontWeight: FONTS.weightBold,
     letterSpacing: 1.5,
     textTransform: "uppercase",
   },
 
   buttonSecondary: {
     borderWidth: 2,
-    borderColor: colors.white,
-    borderRadius: radius.pill,
+    borderColor: COLORS.white,
+    borderRadius: RADIUS.pill,
     paddingVertical: 14,
     alignItems: "center",
     width: "100%",
-    marginTop: spacing.sm,
+    marginTop: SPACING.sm,
   },
 
   buttonSecondaryText: {
-    color: colors.white,
-    fontSize: fonts.sizeMD,
-    fontWeight: fonts.weightBold,
+    color: COLORS.white,
+    fontSize: FONTS.sizeMD,
+    fontWeight: FONTS.weightBold,
     letterSpacing: 1.5,
     textTransform: "uppercase",
   },
 
   title: {
-    fontSize: fonts.size2XL,
-    fontWeight: fonts.weightBold,
-    color: colors.white,
+    fontSize: FONTS.size2XL,
+    fontWeight: FONTS.weightBold,
+    color: COLORS.white,
     textAlign: "center",
   },
 
   subtitle: {
-    fontSize: fonts.sizeMD,
-    color: colors.coolSteel,
+    fontSize: FONTS.sizeMD,
+    color: COLORS.coolSteel,
     textAlign: "center",
     fontStyle: "italic",
-    marginTop: spacing.xs,
+    marginTop: SPACING.xs,
   },
 
   linkText: {
-    color: colors.accent,
-    fontSize: fonts.sizeSM,
+    color: COLORS.accent,
+    fontSize: FONTS.sizeSM,
     textAlign: "center",
-    marginTop: spacing.md,
+    marginTop: SPACING.md,
   },
 
   divider: {
     width: 40,
     height: 3,
-    backgroundColor: colors.accent,
+    backgroundColor: COLORS.accent,
     borderRadius: 2,
     alignSelf: "center",
-    marginVertical: spacing.lg,
+    marginVertical: SPACING.lg,
   },
 
   errorText: {
-    fontSize: fonts.sizeSM,
+    fontSize: FONTS.sizeSM,
     color: "red",
-    fontWeight: fonts.weightMedium,
+    fontWeight: FONTS.weightMedium,
     textAlign: "center",
-    marginTop: spacing.sm,
+    marginTop: SPACING.sm,
   },
 
   requiredMark: {
     color: "red",
-    fontWeight: fonts.weightBold,
-    marginLeft: spacing.xs,
+    fontWeight: FONTS.weightBold,
+    marginLeft: SPACING.xs,
   },
 });
