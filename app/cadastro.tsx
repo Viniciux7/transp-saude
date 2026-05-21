@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -12,64 +12,62 @@ import {
   ActivityIndicator,
   Alert,
   ScrollView,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { MaterialIcons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import { cadastrarUsuario } from '../database/userService';
-import { COLORS, FONTS, SPACING, globalStyles } from '../styles/global-styles';
+} from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { MaterialIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { cadastrarUsuario } from "../database/userService";
+import { colors, fonts, spacing, globalStyles } from "../styles/global-styles";
 
-function validarEmail(email: string): boolean {
+function validateEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-export default function CadastroScreen() {
+export default function RegisterScreen() {
   const router = useRouter();
 
-  const [nome, setNome]                 = useState('');
-  const [email, setEmail]               = useState('');
-  const [senha, setSenha]               = useState('');
-  const [mostrarSenha, setMostrarSenha] = useState(false);
-  const [loading, setLoading]           = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleCadastro = () => {
-    if (!nome.trim()) {
-      Alert.alert('Atenção', 'Nome é obrigatório.');
+  const handleRegister = async () => {
+    if (!name.trim()) {
+      Alert.alert("Atenção", "Nome é obrigatório.");
       return;
     }
-    if (!validarEmail(email)) {
-      Alert.alert('Atenção', 'Formato de e-mail incorreto.');
+    if (!validateEmail(email)) {
+      Alert.alert("Atenção", "Formato de e-mail incorreto.");
       return;
     }
-    if (senha.length < 6) {
-      Alert.alert('Atenção', 'Senha deve ter pelo menos 6 caracteres.');
+    if (password.length < 6) {
+      Alert.alert("Atenção", "Senha deve ter pelo menos 6 caracteres.");
       return;
     }
 
     setLoading(true);
 
-    const resultado = cadastrarUsuario({ nome, email, senha });
+    const result = await cadastrarUsuario({ nome: name, email, senha: password });
 
     setLoading(false);
 
-    if (!resultado.sucesso) {
-      Alert.alert('Erro no cadastro', resultado.erro);
+    if (!result.sucesso) {
+      Alert.alert("Erro no cadastro", result.erro);
       return;
     }
 
-    Alert.alert(
-      'Cadastro realizado com sucesso!',
-      'Faça login para continuar.',
-      [{ text: 'OK', onPress: () => router.replace('/login') }]
-    );
+    Alert.alert("Cadastro realizado com sucesso!", "Faça login para continuar.", [
+      { text: "OK", onPress: () => router.replace("/login") },
+    ]);
   };
 
   return (
     <>
-      <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
+      <StatusBar barStyle="light-content" backgroundColor={colors.darkBackground} />
 
       <LinearGradient
-        colors={[COLORS.primary, COLORS.bgDark]}
+        colors={[colors.oxfordNavy, colors.darkBackground]}
         start={{ x: 0, y: 0 }}
         end={{ x: 0, y: 1 }}
         style={{ flex: 1 }}
@@ -77,20 +75,16 @@ export default function CadastroScreen() {
         <SafeAreaView style={{ flex: 1 }}>
           <KeyboardAvoidingView
             style={{ flex: 1 }}
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            behavior={Platform.OS === "ios" ? "padding" : undefined}
           >
             <ScrollView
               contentContainerStyle={styles.scrollContent}
               keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
             >
-
               <View style={styles.header}>
-                <TouchableOpacity
-                  onPress={() => router.back()}
-                  style={styles.backButton}
-                >
-                  <MaterialIcons name="arrow-back" size={24} color={COLORS.white} />
+                <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+                  <MaterialIcons name="arrow-back" size={24} color={colors.white} />
                 </TouchableOpacity>
 
                 <Text style={styles.headerTitle}>Criar conta</Text>
@@ -100,36 +94,37 @@ export default function CadastroScreen() {
               </View>
 
               <View style={styles.form}>
-
+                {/* Nome */}
                 <View style={globalStyles.inputWrapper}>
                   <MaterialIcons
                     name="person"
                     size={20}
-                    color={COLORS.textMuted}
+                    color={colors.coolSteel}
                     style={globalStyles.inputIcon}
                   />
                   <TextInput
                     style={globalStyles.input}
                     placeholder="Nome completo *"
-                    placeholderTextColor={COLORS.textMuted}
-                    value={nome}
-                    onChangeText={setNome}
+                    placeholderTextColor={colors.coolSteel}
+                    value={name}
+                    onChangeText={setName}
                     autoCapitalize="words"
                     autoCorrect={false}
                   />
                 </View>
 
+                {/* Email */}
                 <View style={globalStyles.inputWrapper}>
                   <MaterialIcons
                     name="email"
                     size={20}
-                    color={COLORS.textMuted}
+                    color={colors.coolSteel}
                     style={globalStyles.inputIcon}
                   />
                   <TextInput
                     style={globalStyles.input}
                     placeholder="E-mail *"
-                    placeholderTextColor={COLORS.textMuted}
+                    placeholderTextColor={colors.coolSteel}
                     value={email}
                     onChangeText={setEmail}
                     keyboardType="email-address"
@@ -138,49 +133,51 @@ export default function CadastroScreen() {
                   />
                 </View>
 
+                {/* Senha */}
                 <View style={globalStyles.inputWrapper}>
                   <MaterialIcons
                     name="lock"
                     size={20}
-                    color={COLORS.textMuted}
+                    color={colors.coolSteel}
                     style={globalStyles.inputIcon}
                   />
                   <TextInput
                     style={globalStyles.input}
                     placeholder="Senha (mínimo 6 caracteres) *"
-                    placeholderTextColor={COLORS.textMuted}
-                    value={senha}
-                    onChangeText={setSenha}
-                    secureTextEntry={!mostrarSenha}
+                    placeholderTextColor={colors.coolSteel}
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry={!showPassword}
                   />
-                  <TouchableOpacity onPress={() => setMostrarSenha(!mostrarSenha)}>
+                  <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
                     <MaterialIcons
-                      name={mostrarSenha ? 'visibility-off' : 'visibility'}
+                      name={showPassword ? "visibility-off" : "visibility"}
                       size={20}
-                      color={COLORS.textMuted}
+                      color={colors.coolSteel}
                     />
                   </TouchableOpacity>
                 </View>
 
+                {/* Botão */}
                 <TouchableOpacity
                   style={[globalStyles.buttonPrimary, loading && { opacity: 0.7 }]}
-                  onPress={handleCadastro}
+                  onPress={handleRegister}
                   disabled={loading}
                   activeOpacity={0.8}
                 >
-                  {loading
-                    ? <ActivityIndicator color={COLORS.textDark} />
-                    : <Text style={globalStyles.buttonPrimaryText}>Criar conta</Text>
-                  }
+                  {loading ? (
+                    <ActivityIndicator color={colors.inkBlack} />
+                  ) : (
+                    <Text style={globalStyles.buttonPrimaryText}>Criar conta</Text>
+                  )}
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => router.push('/login')}>
+                {/* Link para login */}
+                <TouchableOpacity onPress={() => router.push("/login")}>
                   <Text style={globalStyles.linkText}>
-                    Já tem conta?{' '}
-                    <Text style={styles.linkBold}>Entrar</Text>
+                    Já tem conta? <Text style={styles.linkBold}>Entrar</Text>
                   </Text>
                 </TouchableOpacity>
-
               </View>
             </ScrollView>
           </KeyboardAvoidingView>
@@ -193,38 +190,32 @@ export default function CadastroScreen() {
 const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
-    paddingHorizontal: SPACING.lg,
-    paddingBottom: SPACING.xxl,
+    paddingHorizontal: spacing.lg,
+    paddingBottom: spacing.xxl,
   },
-
   header: {
-    paddingTop: SPACING.lg,
-    paddingBottom: SPACING.xl,
+    paddingTop: spacing.lg,
+    paddingBottom: spacing.xl,
   },
-
   backButton: {
-    marginBottom: SPACING.lg,
-    alignSelf: 'flex-start',
+    marginBottom: spacing.lg,
+    alignSelf: "flex-start",
   },
-
   headerTitle: {
-    fontSize: FONTS.size2XL,
-    fontWeight: FONTS.weightBold,
-    color: COLORS.white,
-    marginBottom: SPACING.xs,
+    fontSize: fonts.size2XL,
+    fontWeight: fonts.weightBold,
+    color: colors.white,
+    marginBottom: spacing.xs,
   },
-
   headerSubtitle: {
-    fontSize: FONTS.sizeMD,
-    color: COLORS.textMuted,
+    fontSize: fonts.sizeMD,
+    color: colors.coolSteel,
   },
-
   form: {
     flex: 1,
   },
-
   linkBold: {
-    color: COLORS.accent,
-    fontWeight: FONTS.weightBold,
+    color: colors.accent,
+    fontWeight: fonts.weightBold,
   },
 });

@@ -1,14 +1,14 @@
 import { StyleSheet } from "react-native";
 
 export const colors = {
-  oxfordNavy: "#003366",   // primary
-  pearlAqua: "#A4D1CA",    // secondary
-  inkBlack: "#11181C",     // text dark
-  white: "#FFFFFF",        // background / text light
-  coolSteel: "#9BA1A6",    // muted text
-  darkBackground: "#001A33", // extra (background contrast)
-  accent: "#4FD1C5",         // extra (highlight)
-  accentDark: "#38B2AC",     // extra (highlight darker)
+  oxfordNavy: "#003366",
+  pearlAqua: "#A4D1CA",
+  inkBlack: "#11181C",
+  white: "#FFFFFF",
+  coolSteel: "#9BA1A6",
+  darkBackground: "#001A33",
+  accent: "#4FD1C5",
+  accentDark: "#38B2AC",
 };
 
 export const fonts = {
