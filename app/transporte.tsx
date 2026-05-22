@@ -28,12 +28,12 @@ export default function TransportScreen() {
   const [loading, setLoading] = useState(false);
 
   const handleAddTransport = async () => {
-    // lógica de validação/cadastro aqui
+    
   };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      {/* sua UI aqui */}
+      
     </SafeAreaView>
   );
 }

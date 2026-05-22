@@ -27,12 +27,12 @@ export default function PatientsScreen() {
   const [loading, setLoading] = useState(false);
 
   const handleAddPatient = async () => {
-    // lógica de validação/cadastro aqui
+    
   };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      {/* sua UI aqui */}
+      
     </SafeAreaView>
   );
 }
