@@ -1,13 +1,7 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  StatusBar,
-  SafeAreaView,
-} from 'react-native';
+import { View, Text, Image, TouchableOpacity,
+  StyleSheet, StatusBar } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { COLORS, FONTS, SPACING, globalStyles } from '../styles/global-styles';

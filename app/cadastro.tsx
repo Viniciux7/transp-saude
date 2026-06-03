@@ -1,18 +1,8 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  StatusBar,
-  SafeAreaView,
-  KeyboardAvoidingView,
-  Platform,
-  ActivityIndicator,
-  Alert,
-  ScrollView,
-} from "react-native";
+import { View, Text, TextInput, TouchableOpacity,
+  StyleSheet, StatusBar, KeyboardAvoidingView, Platform,
+  ActivityIndicator, Alert, ScrollView } from "react-native";
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
