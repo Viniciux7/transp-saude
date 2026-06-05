@@ -15,12 +15,14 @@ export default function TransportScreen() {
   const [time, setTime] = useState("");
   const [hospital, setHospital] = useState("");
   const [seats, setSeats] = useState("");
+  const [notes, setNotes] = useState("");
 
   const handleAddTransport = async () => {
       if (!date.trim() && !time.trim() && !hospital.trim() && !seats.trim()) {
         Alert.alert('Atenção', 'Preencha todos os campos.');
         return;
       }
+
     };
 
   return (
@@ -36,28 +38,72 @@ export default function TransportScreen() {
         <ScrollView contentContainerStyle={{}}
          keyboardShouldPersistTaps="handled">
           <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()}
-           style={styles.backButton}>
-            <MaterialIcons name="arrow-back" size={24} color={COLORS.white} />
-          </TouchableOpacity>
-              <Text style={styles.headerTitle}>Entrar</Text>
-              <Text style={styles.headerSubtitle}>
-                Acesse sua conta para solicitar transporte
-              </Text>
-            </View>
-            <View style={styles.form}>
-            <View style={globalStyles.inputWrapper}>
-                                    
-            </View>
+            <TouchableOpacity onPress={() => router.back()}
+            style={styles.backButton}>
+              <MaterialIcons name="arrow-back" size={24} color={COLORS.white} />
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>Cadastrar transporte</Text>
+          </View>
+          <View style={styles.form}>
+          <View style={globalStyles.inputWrapper}>
+            <FontAwesome6 name="calendar-alt" size={24} color="black" />
+            <TextInput
+              style={globalStyles.input}
+              placeholder="Data"
+              placeholderTextColor={COLORS.textMuted}
+              value={date}
+              onChangeText={setDate}
+              keyboardType="numeric"
+              maxLength={10}
+            />
+          </View>
+          <View style={globalStyles.inputWrapper}>
+            <MaterialIcons name="access-time" size={24} color="black" />
+            <TextInput
+              style={globalStyles.input}
+              placeholder="Hora"
+              placeholderTextColor={COLORS.textMuted}
+              value={time}
+              onChangeText={setTime}
+              keyboardType="numeric"
+              maxLength={5}
+            />
+          </View>
+          <View style={globalStyles.inputWrapper}>
+            <MaterialIcons name="local-hospital" size={24} color="black" />
+            <TextInput
+              style={globalStyles.input}
+              placeholder="Endereço do hospital"
+              placeholderTextColor={COLORS.textMuted}
+              value={hospital}
+              onChangeText={setHospital}
+              keyboardType="default"
+            />
+          </View>
+          <View style={globalStyles.inputWrapper}></View>
+            <MaterialIcons name="event-seat" size={24} color="black" />
+            <TextInput
+              style={globalStyles.input}
+              placeholder="Assentos disponíveis"
+              placeholderTextColor={COLORS.textMuted}
+              value={seats}
+              onChangeText={setSeats}
+              keyboardType="numeric"
+            />
+          </View>
+          <View style={globalStyles.inputWrapper}>
+            <MaterialIcons name="directions-bus" size={24} color="black" /> 
+            <TextInput
+              style={styles.notesInput}
+              placeholder="Observações"
+              placeholderTextColor={COLORS.textMuted}
+              value={notes}
+              onChangeText={setNotes}
+              multiline={true}
+              numberOfLines={5}
+            />
           </View>
         </ScrollView>
-        <View>
-          <FontAwesome6 name="calendar-alt" size={24} color="black" />
-          <MaterialIcons name="access-time" size={24} color="black" />
-          <MaterialIcons name="local-hospital" size={24} color="black" />
-          <MaterialIcons name="event-seat" size={24} color="black" />
-          <MaterialIcons name="directions-bus" size={24} color="black" />
-        </View>
       </SafeAreaView>
     </>
   );
@@ -100,5 +146,11 @@ const styles = StyleSheet.create({
   linkBold: {
     color: COLORS.accent,
     fontWeight: FONTS.weightBold,
+  },
+
+  notesInput: {
+    padding: 8,
+    borderRadius: 10,
+    borderColor: COLORS.oxfordNavy
   }
 });

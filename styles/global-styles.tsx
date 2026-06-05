@@ -9,10 +9,10 @@ export const COLORS = {
   darkBackground: "#001A33",
   accent: "#4FD1C5",
   accentDark: "#38B2AC",
-  primary: "#003366",
-  bgDark: "#001A33",
-  textMuted: "#9BA1A6",
-  textDark: "#11181C",
+  primary: "#003366", // repetido
+  bgDark: "#001A33", // repetido
+  textMuted: "#9BA1A6", // repetido
+  textDark: "#11181C", // repetido
 };
 
 export const FONTS = {
@@ -42,11 +42,6 @@ export const RADIUS = {
   md: 12,
   pill: 30,
 };
-
-export const colors = COLORS;
-export const fonts = FONTS;
-export const spacing = SPACING;
-export const radius = RADIUS;
 
 export const globalStyles = StyleSheet.create({
   container: {

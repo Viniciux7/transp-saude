@@ -14,12 +14,14 @@ export default function PatientsScreen() {
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [contact, setContact] = useState("");
+  const [notes, setNotes] = useState("");
 
   const handleAddPatient = async () => {
     if (!name.trim() && !age.trim() && !contact.trim()) {
       Alert.alert('Atenção', 'Preencha todos os campos.');
       return;
     }
+
   };
 
   return (
@@ -38,24 +40,72 @@ export default function PatientsScreen() {
              style={styles.backButton}>
               <MaterialIcons name="arrow-back" size={24} color={COLORS.white} />
             </TouchableOpacity>
-            <Text style={styles.headerTitle}>Entrar</Text>
+            <Text style={styles.headerTitle}>Cadastrar paciente</Text>
               <Text style={styles.headerSubtitle}>
-                Acesse sua conta para solicitar transporte
+                ...
               </Text>
-            </View>
+          </View>
             <View style={styles.form}>
             <View style={globalStyles.inputWrapper}>
-                            
+              <FontAwesome6 name="person" size={24} color="black" />
+              <TextInput
+                style={globalStyles.input}
+                placeholder="Nome"
+                placeholderTextColor={COLORS.textMuted}
+                value={name}
+                onChangeText={setName}
+                keyboardType="default"
+                autoCapitalize="words"
+                />
+            </View>
+            <View style={globalStyles.inputWrapper}>
+              <FontAwesome6 name="id-badge" size={24} color="black" />
+              <TextInput
+                style={globalStyles.input}
+                placeholder="Idade"
+                placeholderTextColor={COLORS.textMuted}
+                value={age}
+                onChangeText={setAge}
+                keyboardType="numeric"
+                />
+            </View>
+            <View style={globalStyles.inputWrapper}>  
+              <FontAwesome6 name="calendar-alt" size={24} color="black" />
+              <TextInput
+                style={globalStyles.input}
+                placeholder="Data"
+                placeholderTextColor={COLORS.textMuted}
+                value={name}
+                onChangeText={setName}
+                keyboardType="numeric"
+                maxLength={10}
+                />
+            </View>
+            <View style={globalStyles.inputWrapper}>
+              <FontAwesome6 name="phone-flip" size={24} color="black" />
+              <TextInput
+                style={globalStyles.input}
+                placeholder="Contato"
+                placeholderTextColor={COLORS.textMuted}
+                value={contact}
+                onChangeText={setContact}
+                keyboardType="phone-pad"
+                />
+            </View>
+            <View style={globalStyles.inputWrapper}>
+              <MaterialIcons name="health-and-safety" size={24} color="black" />
+              <TextInput
+                style={styles.notesInput}
+                placeholder="Observações"
+                placeholderTextColor={COLORS.textMuted}
+                value={notes}
+                onChangeText={setNotes}
+                multiline={true}
+                numberOfLines={5}
+              />
             </View>
           </View>
         </ScrollView>
-        <View>
-          <FontAwesome6 name="person" size={24} color="black" />
-          <FontAwesome6 name="id-badge" size={24} color="black" />
-          <FontAwesome6 name="calendar-alt" size={24} color="black" />
-          <FontAwesome6 name="phone-flip" size={24} color="black" />
-          <MaterialIcons name="health-and-safety" size={24} color="black" />
-        </View>
       </SafeAreaView>
     </>
   );
@@ -93,10 +143,17 @@ const styles = StyleSheet.create({
   form: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center'
   },
 
   linkBold: {
     color: COLORS.accent,
     fontWeight: FONTS.weightBold,
+  },
+
+  notesInput: {
+    padding: 8,
+    borderRadius: 10,
+    borderColor: COLORS.oxfordNavy
   }
 });
