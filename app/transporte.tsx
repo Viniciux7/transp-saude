@@ -1,11 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet,
-  ScrollView, KeyboardAvoidingView, Platform, StatusBar,
-  Alert, ActivityIndicator } from "react-native";
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { MaterialIcons, FontAwesome6 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, FONTS, SPACING, globalStyles } from "../styles/global-styles";
 
 export default function TransportScreen() {
@@ -18,69 +27,76 @@ export default function TransportScreen() {
   const [notes, setNotes] = useState("");
 
   const handleAddTransport = async () => {
-      if (!date.trim() && !time.trim() && !hospital.trim() && !seats.trim()) {
-        Alert.alert('Atenção', 'Preencha todos os campos.');
-        return;
-      }
-
-    };
+    if (!date.trim() && !time.trim() && !hospital.trim() && !seats.trim()) {
+      Alert.alert("Atenção", "Preencha todos os campos.");
+      return;
+    }
+  };
 
   return (
-      <>
-        <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
-        <LinearGradient colors={[COLORS.primary, COLORS.bgDark]} start={{ x: 0, y: 0 }}
-         end={{ x: 0, y: 1 }} style={{ flex: 1 }} ></LinearGradient>
-        <SafeAreaView style={{ flex: 1 }}>
-        <KeyboardAvoidingView style={{ flex: 1 }}
-         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-           
-        </KeyboardAvoidingView>
-        <ScrollView contentContainerStyle={{}}
-         keyboardShouldPersistTaps="handled">
+    <>
+      <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
+      <LinearGradient
+        colors={[COLORS.primary, COLORS.bgDark]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={{ flex: 1 }}
+      ></LinearGradient>
+      <SafeAreaView style={{ flex: 1 }}>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+        ></KeyboardAvoidingView>
+        <ScrollView
+          contentContainerStyle={{}}
+          keyboardShouldPersistTaps="handled"
+        >
           <View style={styles.header}>
-            <TouchableOpacity onPress={() => router.back()}
-            style={styles.backButton}>
+            <TouchableOpacity
+              onPress={() => router.back()}
+              style={styles.backButton}
+            >
               <MaterialIcons name="arrow-back" size={24} color={COLORS.white} />
             </TouchableOpacity>
             <Text style={styles.headerTitle}>Cadastrar transporte</Text>
           </View>
           <View style={styles.form}>
-          <View style={globalStyles.inputWrapper}>
-            <FontAwesome6 name="calendar-alt" size={24} color="black" />
-            <TextInput
-              style={globalStyles.input}
-              placeholder="Data"
-              placeholderTextColor={COLORS.textMuted}
-              value={date}
-              onChangeText={setDate}
-              keyboardType="numeric"
-              maxLength={10}
-            />
-          </View>
-          <View style={globalStyles.inputWrapper}>
-            <MaterialIcons name="access-time" size={24} color="black" />
-            <TextInput
-              style={globalStyles.input}
-              placeholder="Hora"
-              placeholderTextColor={COLORS.textMuted}
-              value={time}
-              onChangeText={setTime}
-              keyboardType="numeric"
-              maxLength={5}
-            />
-          </View>
-          <View style={globalStyles.inputWrapper}>
-            <MaterialIcons name="local-hospital" size={24} color="black" />
-            <TextInput
-              style={globalStyles.input}
-              placeholder="Endereço do hospital"
-              placeholderTextColor={COLORS.textMuted}
-              value={hospital}
-              onChangeText={setHospital}
-              keyboardType="default"
-            />
-          </View>
-          <View style={globalStyles.inputWrapper}></View>
+            <View style={globalStyles.inputWrapper}>
+              <FontAwesome6 name="calendar-alt" size={24} color="black" />
+              <TextInput
+                style={globalStyles.input}
+                placeholder="Data"
+                placeholderTextColor={COLORS.textMuted}
+                value={date}
+                onChangeText={setDate}
+                keyboardType="numeric"
+                maxLength={10}
+              />
+            </View>
+            <View style={globalStyles.inputWrapper}>
+              <MaterialIcons name="access-time" size={24} color="black" />
+              <TextInput
+                style={globalStyles.input}
+                placeholder="Hora"
+                placeholderTextColor={COLORS.textMuted}
+                value={time}
+                onChangeText={setTime}
+                keyboardType="numeric"
+                maxLength={5}
+              />
+            </View>
+            <View style={globalStyles.inputWrapper}>
+              <MaterialIcons name="local-hospital" size={24} color="black" />
+              <TextInput
+                style={globalStyles.input}
+                placeholder="Endereço do hospital"
+                placeholderTextColor={COLORS.textMuted}
+                value={hospital}
+                onChangeText={setHospital}
+                keyboardType="default"
+              />
+            </View>
+            <View style={globalStyles.inputWrapper}></View>
             <MaterialIcons name="event-seat" size={24} color="black" />
             <TextInput
               style={globalStyles.input}
@@ -92,7 +108,7 @@ export default function TransportScreen() {
             />
           </View>
           <View style={globalStyles.inputWrapper}>
-            <MaterialIcons name="directions-bus" size={24} color="black" /> 
+            <MaterialIcons name="directions-bus" size={24} color="black" />
             <TextInput
               style={styles.notesInput}
               placeholder="Observações"
@@ -123,7 +139,7 @@ const styles = StyleSheet.create({
 
   backButton: {
     marginBottom: SPACING.lg,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
 
   headerTitle: {
@@ -140,7 +156,7 @@ const styles = StyleSheet.create({
 
   form: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
 
   linkBold: {
@@ -151,6 +167,6 @@ const styles = StyleSheet.create({
   notesInput: {
     padding: 8,
     borderRadius: 10,
-    borderColor: COLORS.oxfordNavy
-  }
+    borderColor: COLORS.oxfordNavy,
+  },
 });

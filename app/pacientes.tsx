@@ -1,11 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet,
-  ScrollView, KeyboardAvoidingView, Platform, StatusBar,
-  Alert, ActivityIndicator } from "react-native";
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { MaterialIcons, FontAwesome6 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, FONTS, SPACING, globalStyles } from "../styles/global-styles";
 
 export default function PatientsScreen() {
@@ -18,34 +27,40 @@ export default function PatientsScreen() {
 
   const handleAddPatient = async () => {
     if (!name.trim() && !age.trim() && !contact.trim()) {
-      Alert.alert('Atenção', 'Preencha todos os campos.');
+      Alert.alert("Atenção", "Preencha todos os campos.");
       return;
     }
-
   };
 
   return (
     <>
       <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
-      <LinearGradient colors={[COLORS.primary, COLORS.bgDark]} start={{ x: 0, y: 0 }}
-       end={{ x: 0, y: 1 }} style={{ flex: 1 }} ></LinearGradient>
+      <LinearGradient
+        colors={[COLORS.primary, COLORS.bgDark]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={{ flex: 1 }}
+      ></LinearGradient>
       <SafeAreaView style={{ flex: 1 }}>
-        <KeyboardAvoidingView style={{ flex: 1 }}
-         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        </KeyboardAvoidingView>
-        <ScrollView contentContainerStyle={{}}
-         keyboardShouldPersistTaps="handled">
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+        ></KeyboardAvoidingView>
+        <ScrollView
+          contentContainerStyle={{}}
+          keyboardShouldPersistTaps="handled"
+        >
           <View style={styles.header}>
-            <TouchableOpacity onPress={() => router.back()}
-             style={styles.backButton}>
+            <TouchableOpacity
+              onPress={() => router.back()}
+              style={styles.backButton}
+            >
               <MaterialIcons name="arrow-back" size={24} color={COLORS.white} />
             </TouchableOpacity>
             <Text style={styles.headerTitle}>Cadastrar paciente</Text>
-              <Text style={styles.headerSubtitle}>
-                ...
-              </Text>
+            <Text style={styles.headerSubtitle}>...</Text>
           </View>
-            <View style={styles.form}>
+          <View style={styles.form}>
             <View style={globalStyles.inputWrapper}>
               <FontAwesome6 name="person" size={24} color="black" />
               <TextInput
@@ -56,7 +71,7 @@ export default function PatientsScreen() {
                 onChangeText={setName}
                 keyboardType="default"
                 autoCapitalize="words"
-                />
+              />
             </View>
             <View style={globalStyles.inputWrapper}>
               <FontAwesome6 name="id-badge" size={24} color="black" />
@@ -67,9 +82,9 @@ export default function PatientsScreen() {
                 value={age}
                 onChangeText={setAge}
                 keyboardType="numeric"
-                />
+              />
             </View>
-            <View style={globalStyles.inputWrapper}>  
+            <View style={globalStyles.inputWrapper}>
               <FontAwesome6 name="calendar-alt" size={24} color="black" />
               <TextInput
                 style={globalStyles.input}
@@ -79,7 +94,7 @@ export default function PatientsScreen() {
                 onChangeText={setName}
                 keyboardType="numeric"
                 maxLength={10}
-                />
+              />
             </View>
             <View style={globalStyles.inputWrapper}>
               <FontAwesome6 name="phone-flip" size={24} color="black" />
@@ -90,7 +105,7 @@ export default function PatientsScreen() {
                 value={contact}
                 onChangeText={setContact}
                 keyboardType="phone-pad"
-                />
+              />
             </View>
             <View style={globalStyles.inputWrapper}>
               <MaterialIcons name="health-and-safety" size={24} color="black" />
@@ -125,7 +140,7 @@ const styles = StyleSheet.create({
 
   backButton: {
     marginBottom: SPACING.lg,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
 
   headerTitle: {
@@ -142,8 +157,8 @@ const styles = StyleSheet.create({
 
   form: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   linkBold: {
@@ -154,6 +169,6 @@ const styles = StyleSheet.create({
   notesInput: {
     padding: 8,
     borderRadius: 10,
-    borderColor: COLORS.oxfordNavy
-  }
+    borderColor: COLORS.oxfordNavy,
+  },
 });

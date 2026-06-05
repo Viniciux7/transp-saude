@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { COLORS, FONTS } from "../styles/global-styles";
 
 export default function HomeScreen() {

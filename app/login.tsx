@@ -1,25 +1,35 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity,
-  StyleSheet, StatusBar, KeyboardAvoidingView, Platform,
-  ActivityIndicator, Alert, ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
-import { MaterialIcons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import { buscarUsuarioPorEmail } from '../database/userService';
-import { COLORS, FONTS, SPACING, globalStyles } from '../styles/global-styles';
+import { MaterialIcons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { buscarUsuarioPorEmail } from "../database/userService";
+import { COLORS, FONTS, SPACING, globalStyles } from "../styles/global-styles";
 
 export default function LoginScreen() {
   const router = useRouter();
 
-  const [email, setEmail]               = useState('');
-  const [senha, setSenha]               = useState('');
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
   const [mostrarSenha, setMostrarSenha] = useState(false);
-  const [loading, setLoading]           = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = () => {
     if (!email.trim() || !senha.trim()) {
-      Alert.alert('Atenção', 'Preencha todos os campos.');
+      Alert.alert("Atenção", "Preencha todos os campos.");
       return;
     }
 
@@ -30,16 +40,16 @@ export default function LoginScreen() {
     setLoading(false);
 
     if (!usuario) {
-      Alert.alert('Conta não encontrada', 'Este e-mail não está cadastrado.');
+      Alert.alert("Conta não encontrada", "Este e-mail não está cadastrado.");
       return;
     }
 
     if (usuario.senha !== senha) {
-      Alert.alert('Senha inválida', 'Verifique sua senha e tente novamente.');
+      Alert.alert("Senha inválida", "Verifique sua senha e tente novamente.");
       return;
     }
 
-    router.replace('/home');
+    router.replace("/home");
   };
 
   return (
@@ -55,19 +65,22 @@ export default function LoginScreen() {
         <SafeAreaView style={{ flex: 1 }}>
           <KeyboardAvoidingView
             style={{ flex: 1 }}
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            behavior={Platform.OS === "ios" ? "padding" : undefined}
           >
             <ScrollView
               contentContainerStyle={styles.scrollContent}
               keyboardShouldPersistTaps="handled"
             >
-
               <View style={styles.header}>
                 <TouchableOpacity
                   onPress={() => router.back()}
                   style={styles.backButton}
                 >
-                  <MaterialIcons name="arrow-back" size={24} color={COLORS.white} />
+                  <MaterialIcons
+                    name="arrow-back"
+                    size={24}
+                    color={COLORS.white}
+                  />
                 </TouchableOpacity>
 
                 <Text style={styles.headerTitle}>Entrar</Text>
@@ -77,7 +90,6 @@ export default function LoginScreen() {
               </View>
 
               <View style={styles.form}>
-
                 <View style={globalStyles.inputWrapper}>
                   <MaterialIcons
                     name="email"
@@ -112,9 +124,11 @@ export default function LoginScreen() {
                     onChangeText={setSenha}
                     secureTextEntry={!mostrarSenha}
                   />
-                  <TouchableOpacity onPress={() => setMostrarSenha(!mostrarSenha)}>
+                  <TouchableOpacity
+                    onPress={() => setMostrarSenha(!mostrarSenha)}
+                  >
                     <MaterialIcons
-                      name={mostrarSenha ? 'visibility-off' : 'visibility'}
+                      name={mostrarSenha ? "visibility-off" : "visibility"}
                       size={20}
                       color={COLORS.textMuted}
                     />
@@ -122,24 +136,27 @@ export default function LoginScreen() {
                 </View>
 
                 <TouchableOpacity
-                  style={[globalStyles.buttonPrimary, loading && { opacity: 0.7 }]}
+                  style={[
+                    globalStyles.buttonPrimary,
+                    loading && { opacity: 0.7 },
+                  ]}
                   onPress={handleLogin}
                   disabled={loading}
                   activeOpacity={0.8}
                 >
-                  {loading
-                    ? <ActivityIndicator color={COLORS.textDark} />
-                    : <Text style={globalStyles.buttonPrimaryText}>Entrar</Text>
-                  }
+                  {loading ? (
+                    <ActivityIndicator color={COLORS.textDark} />
+                  ) : (
+                    <Text style={globalStyles.buttonPrimaryText}>Entrar</Text>
+                  )}
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => router.push('/cadastro')}>
+                <TouchableOpacity onPress={() => router.push("/cadastro")}>
                   <Text style={globalStyles.linkText}>
-                    Não tem conta?{' '}
+                    Não tem conta?{" "}
                     <Text style={styles.linkBold}>Cadastre-se</Text>
                   </Text>
                 </TouchableOpacity>
-
               </View>
             </ScrollView>
           </KeyboardAvoidingView>
@@ -163,7 +180,7 @@ const styles = StyleSheet.create({
 
   backButton: {
     marginBottom: SPACING.lg,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
 
   headerTitle: {
@@ -180,7 +197,7 @@ const styles = StyleSheet.create({
 
   form: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
 
   linkBold: {

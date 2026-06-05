@@ -1,10 +1,16 @@
-import React from 'react';
-import { View, Text, Image, TouchableOpacity,
-  StyleSheet, StatusBar } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
-import { COLORS, FONTS, SPACING, globalStyles } from '../styles/global-styles';
+import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
+import React from "react";
+import {
+  Image,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { COLORS, FONTS, SPACING, globalStyles } from "../styles/global-styles";
 
 export default function IndexScreen() {
   const router = useRouter();
@@ -20,10 +26,9 @@ export default function IndexScreen() {
         style={styles.gradient}
       >
         <SafeAreaView style={styles.container}>
-
           <View style={styles.logoSection}>
             <Image
-              source={require('../assets/images/brasao.png')}
+              source={require("../assets/images/brasao.png")}
               style={styles.brasao}
               resizeMode="contain"
             />
@@ -39,7 +44,7 @@ export default function IndexScreen() {
             <TouchableOpacity
               style={globalStyles.buttonSecondary}
               activeOpacity={0.8}
-              onPress={() => router.push('/cadastro')}
+              onPress={() => router.push("/cadastro")}
             >
               <Text style={globalStyles.buttonSecondaryText}>Cadastrar</Text>
             </TouchableOpacity>
@@ -47,14 +52,15 @@ export default function IndexScreen() {
             <TouchableOpacity
               style={globalStyles.buttonPrimary}
               activeOpacity={0.8}
-              onPress={() => router.push('/login')}
+              onPress={() => router.push("/login")}
             >
               <Text style={globalStyles.buttonPrimaryText}>Entrar</Text>
             </TouchableOpacity>
           </View>
 
-          <Text style={styles.footer}>Prefeitura Municipal de São Simão - SP</Text>
-
+          <Text style={styles.footer}>
+            Prefeitura Municipal de São Simão - SP
+          </Text>
         </SafeAreaView>
       </LinearGradient>
     </>
@@ -68,16 +74,16 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: SPACING.xl,
     paddingVertical: SPACING.xxl,
   },
 
   logoSection: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   brasao: {
@@ -86,12 +92,12 @@ const styles = StyleSheet.create({
   },
 
   textSection: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: SPACING.xl,
   },
 
   buttonSection: {
-    width: '100%',
+    width: "100%",
     gap: SPACING.sm,
     marginBottom: SPACING.lg,
   },
@@ -99,6 +105,6 @@ const styles = StyleSheet.create({
   footer: {
     fontSize: FONTS.sizeXS,
     color: COLORS.textMuted,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
