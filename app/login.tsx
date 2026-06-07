@@ -1,3 +1,12 @@
+/**
+ * app/login.tsx (ou screens/login.tsx — ajuste conforme sua estrutura)
+ *
+ * Fluxo:
+ *  1. Usuário digita e-mail e senha
+ *  2. fazerLogin() autentica no Firebase e retorna o role
+ *  3. Redirecionamos: citizen → /home | admin → /painel
+ */
+
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
@@ -16,48 +25,43 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { buscarUsuarioPorEmail } from "../database/usuarioService";
+import { fazerLogin } from "../database/usuarioService"; // ← serviço com Firebase
 import { COLORS, FONTS, SPACING, globalStyles } from "../styles/global-styles";
 
 export default function LoginScreen() {
   const router = useRouter();
 
-  const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
+  const [email, setEmail]             = useState("");
+  const [senha, setSenha]             = useState("");
   const [mostrarSenha, setMostrarSenha] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading]         = useState(false);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email.trim() || !senha.trim()) {
       Alert.alert("Atenção", "Preencha todos os campos.");
       return;
     }
 
     setLoading(true);
-
-    const usuario = buscarUsuarioPorEmail(email);
-
+    const resultado = await fazerLogin(email, senha);
     setLoading(false);
 
-    if (!usuario) {
-      Alert.alert("Conta não encontrada", "Este e-mail não está cadastrado.");
+    if (!resultado.sucesso) {
+      Alert.alert("Erro ao entrar", resultado.erro);
       return;
     }
 
-    if (usuario.senha !== senha) {
-      Alert.alert("Senha inválida", "Verifique sua senha e tente novamente.");
-      return;
+    // Redireciona conforme o perfil do usuário
+    if (resultado.role === "admin") {
+      router.replace("/painel" as any);
+    } else {
+      router.replace("/home");
     }
-
-    router.replace("/home");
   };
 
   return (
     <>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor={COLORS.darkBackground}
-      />
+      <StatusBar barStyle="light-content" backgroundColor={COLORS.darkBackground} />
 
       <LinearGradient
         colors={[COLORS.oxfordNavy, COLORS.darkBackground]}
@@ -74,16 +78,13 @@ export default function LoginScreen() {
               contentContainerStyle={styles.scrollContent}
               keyboardShouldPersistTaps="handled"
             >
+              {/* ── Header ──────────────────────────────────────────────── */}
               <View style={styles.header}>
                 <TouchableOpacity
                   onPress={() => router.back()}
                   style={styles.backButton}
                 >
-                  <MaterialIcons
-                    name="arrow-back"
-                    size={24}
-                    color={COLORS.white}
-                  />
+                  <MaterialIcons name="arrow-back" size={24} color={COLORS.white} />
                 </TouchableOpacity>
 
                 <Text style={styles.headerTitle}>Entrar</Text>
@@ -92,7 +93,9 @@ export default function LoginScreen() {
                 </Text>
               </View>
 
+              {/* ── Formulário ─────────────────────────────────────────── */}
               <View style={styles.form}>
+                {/* E-mail */}
                 <View style={globalStyles.inputWrapper}>
                   <MaterialIcons
                     name="email"
@@ -112,6 +115,7 @@ export default function LoginScreen() {
                   />
                 </View>
 
+                {/* Senha */}
                 <View style={globalStyles.inputWrapper}>
                   <MaterialIcons
                     name="lock"
@@ -127,9 +131,7 @@ export default function LoginScreen() {
                     onChangeText={setSenha}
                     secureTextEntry={!mostrarSenha}
                   />
-                  <TouchableOpacity
-                    onPress={() => setMostrarSenha(!mostrarSenha)}
-                  >
+                  <TouchableOpacity onPress={() => setMostrarSenha(!mostrarSenha)}>
                     <MaterialIcons
                       name={mostrarSenha ? "visibility-off" : "visibility"}
                       size={20}
@@ -138,11 +140,9 @@ export default function LoginScreen() {
                   </TouchableOpacity>
                 </View>
 
+                {/* Botão entrar */}
                 <TouchableOpacity
-                  style={[
-                    globalStyles.buttonPrimary,
-                    loading && { opacity: 0.7 },
-                  ]}
+                  style={[globalStyles.buttonPrimary, loading && { opacity: 0.7 }]}
                   onPress={handleLogin}
                   disabled={loading}
                   activeOpacity={0.8}
@@ -154,6 +154,7 @@ export default function LoginScreen() {
                   )}
                 </TouchableOpacity>
 
+                {/* Link cadastro */}
                 <TouchableOpacity onPress={() => router.push("/cadastro")}>
                   <Text style={globalStyles.linkText}>
                     Não tem conta?{" "}
@@ -175,34 +176,28 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.lg,
     paddingBottom: SPACING.xxl,
   },
-
   header: {
     paddingTop: SPACING.lg,
     paddingBottom: SPACING.xl,
   },
-
   backButton: {
     marginBottom: SPACING.lg,
     alignSelf: "flex-start",
   },
-
   headerTitle: {
     fontSize: FONTS.size2XL,
     fontWeight: FONTS.weightBold,
     color: COLORS.white,
     marginBottom: SPACING.xs,
   },
-
   headerSubtitle: {
     fontSize: FONTS.sizeMD,
     color: COLORS.coolSteel,
   },
-
   form: {
     flex: 1,
     justifyContent: "center",
   },
-
   linkBold: {
     color: COLORS.accent,
     fontWeight: FONTS.weightBold,

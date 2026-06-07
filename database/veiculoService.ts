@@ -1,4 +1,4 @@
-import { db } from "./sqlite";
+/**import { db } from "./sqlite";
 
 interface Veiculo {
   id: number;
@@ -35,3 +35,4 @@ export function excluirVeiculo(id: number): boolean {
   db.runSync(`DELETE FROM veiculos WHERE id = ?`, [id]);
   return true;
 }
+*/

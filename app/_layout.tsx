@@ -1,11 +1,10 @@
 import { Stack } from "expo-router";
-import { useEffect } from "react";
-import { inicializarBanco } from "../database/sqlite";
+// import { inicializarBanco } from "../database/sqlite";
 
 export default function RootLayout() {
-  useEffect(() => {
-    inicializarBanco();
-  }, []);
+  // useEffect(() => {
+  //   inicializarBanco();
+  // }, []);
 
   return <Stack screenOptions={{ headerShown: false }} />;
 }

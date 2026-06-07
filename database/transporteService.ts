@@ -1,4 +1,4 @@
-import { db } from "./sqlite";
+/**import { db } from "./sqlite";
 
 type ResultadoCadastro = { sucesso: true } | { sucesso: false; erro: string };
 
@@ -63,3 +63,4 @@ export function excluirTransporte(id: number): boolean {
   db.runSync(`DELETE FROM transportes WHERE id = ?`, [id]);
   return true;
 }
+*/
