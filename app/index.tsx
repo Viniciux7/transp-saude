@@ -17,10 +17,10 @@ export default function IndexScreen() {
 
   return (
     <>
-      <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
+      <StatusBar barStyle="light-content" backgroundColor={COLORS.darkBackground} />
 
       <LinearGradient
-        colors={[COLORS.primary, COLORS.bgDark]}
+        colors={[COLORS.oxfordNavy, COLORS.darkBackground]}
         start={{ x: 0, y: 0 }}
         end={{ x: 0, y: 1 }}
         style={styles.gradient}
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
 
   footer: {
     fontSize: FONTS.sizeXS,
-    color: COLORS.textMuted,
+    color: COLORS.coolSteel,
     textAlign: "center",
   },
 });

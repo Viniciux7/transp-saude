@@ -8,11 +8,7 @@ export const COLORS = {
   coolSteel: "#9BA1A6",
   darkBackground: "#001A33",
   accent: "#4FD1C5",
-  accentDark: "#38B2AC",
-  primary: "#003366", // repetido
-  bgDark: "#001A33", // repetido
-  textMuted: "#9BA1A6", // repetido
-  textDark: "#11181C", // repetido
+  accentDark: "#38B2AC"
 };
 
 export const FONTS = {

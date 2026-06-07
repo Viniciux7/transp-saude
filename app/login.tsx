@@ -16,7 +16,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { buscarUsuarioPorEmail } from "../database/userService";
+import { buscarUsuarioPorEmail } from "../database/usuarioService";
 import { COLORS, FONTS, SPACING, globalStyles } from "../styles/global-styles";
 
 export default function LoginScreen() {
@@ -54,10 +54,13 @@ export default function LoginScreen() {
 
   return (
     <>
-      <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={COLORS.darkBackground}
+      />
 
       <LinearGradient
-        colors={[COLORS.primary, COLORS.bgDark]}
+        colors={[COLORS.oxfordNavy, COLORS.darkBackground]}
         start={{ x: 0, y: 0 }}
         end={{ x: 0, y: 1 }}
         style={{ flex: 1 }}
@@ -94,13 +97,13 @@ export default function LoginScreen() {
                   <MaterialIcons
                     name="email"
                     size={20}
-                    color={COLORS.textMuted}
+                    color={COLORS.coolSteel}
                     style={globalStyles.inputIcon}
                   />
                   <TextInput
                     style={globalStyles.input}
                     placeholder="E-mail"
-                    placeholderTextColor={COLORS.textMuted}
+                    placeholderTextColor={COLORS.coolSteel}
                     value={email}
                     onChangeText={setEmail}
                     keyboardType="email-address"
@@ -113,13 +116,13 @@ export default function LoginScreen() {
                   <MaterialIcons
                     name="lock"
                     size={20}
-                    color={COLORS.textMuted}
+                    color={COLORS.coolSteel}
                     style={globalStyles.inputIcon}
                   />
                   <TextInput
                     style={globalStyles.input}
                     placeholder="Senha"
-                    placeholderTextColor={COLORS.textMuted}
+                    placeholderTextColor={COLORS.coolSteel}
                     value={senha}
                     onChangeText={setSenha}
                     secureTextEntry={!mostrarSenha}
@@ -130,7 +133,7 @@ export default function LoginScreen() {
                     <MaterialIcons
                       name={mostrarSenha ? "visibility-off" : "visibility"}
                       size={20}
-                      color={COLORS.textMuted}
+                      color={COLORS.coolSteel}
                     />
                   </TouchableOpacity>
                 </View>
@@ -145,7 +148,7 @@ export default function LoginScreen() {
                   activeOpacity={0.8}
                 >
                   {loading ? (
-                    <ActivityIndicator color={COLORS.textDark} />
+                    <ActivityIndicator color={COLORS.inkBlack} />
                   ) : (
                     <Text style={globalStyles.buttonPrimaryText}>Entrar</Text>
                   )}
@@ -192,7 +195,7 @@ const styles = StyleSheet.create({
 
   headerSubtitle: {
     fontSize: FONTS.sizeMD,
-    color: COLORS.textMuted,
+    color: COLORS.coolSteel,
   },
 
   form: {

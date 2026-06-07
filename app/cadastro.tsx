@@ -16,7 +16,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { cadastrarUsuario } from "../database/userService";
+import { cadastrarUsuario } from "../database/usuarioService";
 import { COLORS, FONTS, SPACING, globalStyles } from "../styles/global-styles";
 
 function validateEmail(email: string): boolean {

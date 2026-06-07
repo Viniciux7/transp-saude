@@ -17,16 +17,17 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, FONTS, SPACING, globalStyles } from "../styles/global-styles";
 
-export default function PatientsScreen() {
+export default function TransportScreen() {
   const router = useRouter();
 
-  const [name, setName] = useState("");
-  const [age, setAge] = useState("");
-  const [contact, setContact] = useState("");
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+  const [hospital, setHospital] = useState("");
+  const [seats, setSeats] = useState("");
   const [notes, setNotes] = useState("");
 
-  const handleAddPatient = async () => {
-    if (!name.trim() && !age.trim() && !contact.trim()) {
+  const handleAddTransport = async () => {
+    if (!date.trim() || !time.trim() || !hospital.trim() || !seats.trim()) {
       Alert.alert("Atenção", "Preencha todos os campos.");
       return;
     }
@@ -57,68 +58,66 @@ export default function PatientsScreen() {
                 >
                   <MaterialIcons name="arrow-back" size={24} color={COLORS.white} />
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>Cadastrar paciente</Text>
-                <Text style={styles.headerSubtitle}>...</Text>
+                <Text style={styles.headerTitle}>Cadastrar transporte</Text>
               </View>
               <View style={styles.form}>
-                <View style={globalStyles.inputWrapper}>
-                  <FontAwesome6 name="person" size={24} color="black" />
-                  <TextInput
-                    style={globalStyles.input}
-                    placeholder="Nome"
-                    placeholderTextColor={COLORS.coolSteel}
-                    value={name}
-                    onChangeText={setName}
-                    keyboardType="default"
-                    autoCapitalize="words"
-                  />
-                </View>
-                <View style={globalStyles.inputWrapper}>
-                  <FontAwesome6 name="id-badge" size={24} color="black" />
-                  <TextInput
-                    style={globalStyles.input}
-                    placeholder="Idade"
-                    placeholderTextColor={COLORS.coolSteel}
-                    value={age}
-                    onChangeText={setAge}
-                    keyboardType="numeric"
-                  />
-                </View>
                 <View style={globalStyles.inputWrapper}>
                   <FontAwesome6 name="calendar-alt" size={24} color="black" />
                   <TextInput
                     style={globalStyles.input}
                     placeholder="Data"
                     placeholderTextColor={COLORS.coolSteel}
-                    value={name}
-                    onChangeText={setName}
+                    value={date}
+                    onChangeText={setDate}
                     keyboardType="numeric"
                     maxLength={10}
                   />
                 </View>
                 <View style={globalStyles.inputWrapper}>
-                  <FontAwesome6 name="phone-flip" size={24} color="black" />
+                  <MaterialIcons name="access-time" size={24} color="black" />
                   <TextInput
                     style={globalStyles.input}
-                    placeholder="Contato"
+                    placeholder="Hora"
                     placeholderTextColor={COLORS.coolSteel}
-                    value={contact}
-                    onChangeText={setContact}
-                    keyboardType="phone-pad"
+                    value={time}
+                    onChangeText={setTime}
+                    keyboardType="numeric"
+                    maxLength={5}
                   />
                 </View>
                 <View style={globalStyles.inputWrapper}>
-                  <MaterialIcons name="health-and-safety" size={24} color="black" />
+                  <MaterialIcons name="local-hospital" size={24} color="black" />
                   <TextInput
-                    style={styles.notesInput}
-                    placeholder="Observações"
+                    style={globalStyles.input}
+                    placeholder="Endereço do hospital"
                     placeholderTextColor={COLORS.coolSteel}
-                    value={notes}
-                    onChangeText={setNotes}
-                    multiline={true}
-                    numberOfLines={5}
+                    value={hospital}
+                    onChangeText={setHospital}
+                    keyboardType="default"
                   />
                 </View>
+                <View style={globalStyles.inputWrapper}></View>
+                <MaterialIcons name="event-seat" size={24} color="black" />
+                <TextInput
+                  style={globalStyles.input}
+                  placeholder="Assentos disponíveis"
+                  placeholderTextColor={COLORS.coolSteel}
+                  value={seats}
+                  onChangeText={setSeats}
+                  keyboardType="numeric"
+                />
+              </View>
+              <View style={globalStyles.inputWrapper}>
+                <MaterialIcons name="directions-bus" size={24} color="black" />
+                <TextInput
+                  style={styles.notesInput}
+                  placeholder="Observações"
+                  placeholderTextColor={COLORS.coolSteel}
+                  value={notes}
+                  onChangeText={setNotes}
+                  multiline={true}
+                  numberOfLines={5}
+                />
               </View>
             </ScrollView>
           </KeyboardAvoidingView>
@@ -160,7 +159,6 @@ const styles = StyleSheet.create({
   form: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
   },
 
   linkBold: {
