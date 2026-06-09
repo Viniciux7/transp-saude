@@ -3,8 +3,7 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, initializeAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { Platform } from 'react-native';
-
-const { getReactNativePersistence } = require('firebase/auth');
+import { getReactNativePersistence } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey:            "AIzaSyD9qag0V86xEJl8euQX6mlu0sq3b1yNlog",

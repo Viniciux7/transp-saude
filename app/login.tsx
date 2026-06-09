@@ -12,29 +12,29 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-  ActivityIndicator,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    Alert,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    StatusBar,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { fazerLogin } from "../database/usuarioService"; // ← serviço com Firebase
+import { fazerLogin } from "../database/firebase/usuarioService"; // ← serviço com Firebase
 import { COLORS, FONTS, SPACING, globalStyles } from "../styles/global-styles";
 
 export default function LoginScreen() {
   const router = useRouter();
 
-  const [email, setEmail]             = useState("");
-  const [senha, setSenha]             = useState("");
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
   const [mostrarSenha, setMostrarSenha] = useState(false);
-  const [loading, setLoading]         = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
     if (!email.trim() || !senha.trim()) {
@@ -61,7 +61,10 @@ export default function LoginScreen() {
 
   return (
     <>
-      <StatusBar barStyle="light-content" backgroundColor={COLORS.darkBackground} />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={COLORS.darkBackground}
+      />
 
       <LinearGradient
         colors={[COLORS.oxfordNavy, COLORS.darkBackground]}
@@ -84,7 +87,11 @@ export default function LoginScreen() {
                   onPress={() => router.back()}
                   style={styles.backButton}
                 >
-                  <MaterialIcons name="arrow-back" size={24} color={COLORS.white} />
+                  <MaterialIcons
+                    name="arrow-back"
+                    size={24}
+                    color={COLORS.white}
+                  />
                 </TouchableOpacity>
 
                 <Text style={styles.headerTitle}>Entrar</Text>
@@ -131,7 +138,9 @@ export default function LoginScreen() {
                     onChangeText={setSenha}
                     secureTextEntry={!mostrarSenha}
                   />
-                  <TouchableOpacity onPress={() => setMostrarSenha(!mostrarSenha)}>
+                  <TouchableOpacity
+                    onPress={() => setMostrarSenha(!mostrarSenha)}
+                  >
                     <MaterialIcons
                       name={mostrarSenha ? "visibility-off" : "visibility"}
                       size={20}
@@ -142,7 +151,10 @@ export default function LoginScreen() {
 
                 {/* Botão entrar */}
                 <TouchableOpacity
-                  style={[globalStyles.buttonPrimary, loading && { opacity: 0.7 }]}
+                  style={[
+                    globalStyles.buttonPrimary,
+                    loading && { opacity: 0.7 },
+                  ]}
                   onPress={handleLogin}
                   disabled={loading}
                   activeOpacity={0.8}

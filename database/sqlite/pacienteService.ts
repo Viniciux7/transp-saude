@@ -1,4 +1,4 @@
-import { db } from "./sqlite";
+/*import { db } from "./sqlite";
 
 type ResultadoCadastro = { sucesso: true } | { sucesso: false; erro: string };
 
@@ -48,3 +48,4 @@ export function excluirPaciente(id: number): boolean {
   db.runSync(`DELETE FROM pacientes WHERE id = ?`, [id]);
   return true;
 }
+*/

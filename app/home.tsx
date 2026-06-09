@@ -12,21 +12,21 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
-  Alert,
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    Alert,
+    FlatList,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
-  Viagem,
-  escutarViagensDoCidadao,
-  fazerLogout,
-  primeiroNomeAtual,
-} from "../database/usuarioService";
+    Viagem,
+    escutarViagensDoCidadao,
+    fazerLogout,
+    primeiroNomeAtual,
+} from "../database/firebase/usuarioService";
 import { COLORS, FONTS, SPACING, globalStyles } from "../styles/global-styles";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -39,9 +39,9 @@ const statusConfig: Record<
   StatusViagem,
   { cor: string; label: string; icone: keyof typeof MaterialIcons.glyphMap }
 > = {
-  pending:   { cor: "#F59E0B", label: "Pendente",   icone: "hourglass-empty" },
-  confirmed: { cor: "#10B981", label: "Confirmado", icone: "check-circle"    },
-  rejected:  { cor: "#EF4444", label: "Recusado",   icone: "cancel"          },
+  pending: { cor: "#F59E0B", label: "Pendente", icone: "hourglass-empty" },
+  confirmed: { cor: "#10B981", label: "Confirmado", icone: "check-circle" },
+  rejected: { cor: "#EF4444", label: "Recusado", icone: "cancel" },
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -49,7 +49,8 @@ const statusConfig: Record<
 // ─────────────────────────────────────────────────────────────────────────────
 
 function CardViagem({ viagem }: { viagem: Viagem }) {
-  const config = statusConfig[viagem.status as StatusViagem] ?? statusConfig.pending;
+  const config =
+    statusConfig[viagem.status as StatusViagem] ?? statusConfig.pending;
 
   return (
     <View style={cardStyles.container}>
@@ -60,7 +61,9 @@ function CardViagem({ viagem }: { viagem: Viagem }) {
             <Text style={cardStyles.destino}>{viagem.destino}</Text>
             <Text style={cardStyles.data}>{viagem.dataViagem}</Text>
           </View>
-          <View style={[cardStyles.badge, { backgroundColor: config.cor + "20" }]}>
+          <View
+            style={[cardStyles.badge, { backgroundColor: config.cor + "20" }]}
+          >
             <MaterialIcons name={config.icone} size={12} color={config.cor} />
             <Text style={[cardStyles.badgeText, { color: config.cor }]}>
               {config.label}
@@ -106,8 +109,13 @@ const cardStyles = StyleSheet.create({
     alignItems: "flex-start",
     gap: 8,
   },
-  destino: { fontSize: 14, fontWeight: "700", color: "#1F2937", marginBottom: 2 },
-  data:    { fontSize: 12, color: "#6B7280" },
+  destino: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: "#1F2937",
+    marginBottom: 2,
+  },
+  data: { fontSize: 12, color: "#6B7280" },
   badge: {
     flexDirection: "row",
     alignItems: "center",
@@ -117,9 +125,19 @@ const cardStyles = StyleSheet.create({
     borderRadius: 20,
   },
   badgeText: { fontSize: 11, fontWeight: "700" },
-  acompanhanteTag: { flexDirection: "row", alignItems: "center", gap: 4, marginTop: 8 },
+  acompanhanteTag: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    marginTop: 8,
+  },
   acompanhanteText: { fontSize: 12, color: "#6B7280" },
-  observacao: { fontSize: 12, color: "#9CA3AF", marginTop: 6, fontStyle: "italic" },
+  observacao: {
+    fontSize: 12,
+    color: "#9CA3AF",
+    marginTop: 6,
+    fontStyle: "italic",
+  },
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -129,7 +147,7 @@ const cardStyles = StyleSheet.create({
 export default function HomeScreen() {
   const router = useRouter();
 
-  const [viagens, setViagens]       = useState<Viagem[]>([]);
+  const [viagens, setViagens] = useState<Viagem[]>([]);
   const [carregando, setCarregando] = useState(true);
 
   // Primeiro nome do usuário logado (displayName do Firebase Auth)
@@ -179,7 +197,11 @@ export default function HomeScreen() {
           <Text style={styles.headerSubtitulo}>Bem-vindo ao TranspSaúde</Text>
         </View>
         <TouchableOpacity onPress={handleSair} style={styles.btnSair}>
-          <MaterialIcons name="logout" size={22} color="rgba(255,255,255,0.8)" />
+          <MaterialIcons
+            name="logout"
+            size={22}
+            color="rgba(255,255,255,0.8)"
+          />
         </TouchableOpacity>
       </View>
 
@@ -199,17 +221,25 @@ export default function HomeScreen() {
           activeOpacity={0.8}
           onPress={() => router.push("/transporte" as any)}
         >
-          <Text style={globalStyles.buttonPrimaryText}>Cadastrar transporte</Text>
+          <Text style={globalStyles.buttonPrimaryText}>
+            Cadastrar transporte
+          </Text>
         </TouchableOpacity>
 
         {/* ── Minhas Viagens ────────────────────────────────────────────── */}
         <View style={styles.secaoHeader}>
           <Text style={styles.secaoTitulo}>Minhas Viagens</Text>
-          <Text style={styles.secaoContador}>{viagens.length} solicitação(ões)</Text>
+          <Text style={styles.secaoContador}>
+            {viagens.length} solicitação(ões)
+          </Text>
         </View>
 
         {carregando ? (
-          <ActivityIndicator size="large" color={COLORS.accent} style={{ marginTop: 40 }} />
+          <ActivityIndicator
+            size="large"
+            color={COLORS.accent}
+            style={{ marginTop: 40 }}
+          />
         ) : (
           <FlatList
             data={viagens}
@@ -220,9 +250,12 @@ export default function HomeScreen() {
             ListEmptyComponent={
               <View style={styles.listaVazia}>
                 <MaterialIcons name="inbox" size={52} color="#D1D5DB" />
-                <Text style={styles.listaVaziaText}>Nenhuma viagem solicitada</Text>
+                <Text style={styles.listaVaziaText}>
+                  Nenhuma viagem solicitada
+                </Text>
                 <Text style={styles.listaVaziaSubtext}>
-                  Use "Cadastrar transporte" para fazer sua primeira solicitação.
+                  Use "Cadastrar transporte" para fazer sua primeira
+                  solicitação.
                 </Text>
               </View>
             }
@@ -271,7 +304,7 @@ const styles = StyleSheet.create({
     marginTop: SPACING.xl,
     marginBottom: SPACING.sm,
   },
-  secaoTitulo:   { fontSize: 17, fontWeight: "700", color: "#1F2937" },
+  secaoTitulo: { fontSize: 17, fontWeight: "700", color: "#1F2937" },
   secaoContador: { fontSize: 12, color: "#9CA3AF" },
 
   listaVazia: { alignItems: "center", paddingTop: 48, gap: 8 },

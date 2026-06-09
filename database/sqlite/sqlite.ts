@@ -1,4 +1,4 @@
-/**import { Platform } from 'react-native';
+/*import { Platform } from 'react-native';
 import * as SQLite from 'expo-sqlite';
 
 export const db = Platform.OS !== 'web'

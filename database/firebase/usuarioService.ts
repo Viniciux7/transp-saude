@@ -84,29 +84,29 @@ export function excluirUsuario(id: number): boolean {
  */
 
 import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  updateProfile,
-} from 'firebase/auth';
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    updateProfile,
+} from "firebase/auth";
 import {
-  collection,
-  doc,
-  getDoc,
-  onSnapshot,
-  orderBy,
-  query,
-  serverTimestamp,
-  setDoc,
-  where,
-} from 'firebase/firestore';
-import { auth, db } from './firebaseConfig'; // ajuste o caminho se necessário
+    collection,
+    doc,
+    getDoc,
+    onSnapshot,
+    orderBy,
+    query,
+    serverTimestamp,
+    setDoc,
+    where,
+} from "firebase/firestore";
+import { auth, db } from "./firebaseConfig"; // ajuste o caminho se necessário
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TIPOS
 // ─────────────────────────────────────────────────────────────────────────────
 
-export type Role = 'citizen' | 'admin';
+export type Role = "citizen" | "admin";
 
 export interface DadosUsuario {
   uid: string;
@@ -115,7 +115,7 @@ export interface DadosUsuario {
   role: Role;
 }
 
-export type StatusViagem = 'pending' | 'confirmed' | 'rejected';
+export type StatusViagem = "pending" | "confirmed" | "rejected";
 
 export interface Viagem {
   id: string;
@@ -145,28 +145,33 @@ interface ResultadoCadastro {
  * Cria um novo usuário no Firebase Auth e salva seus dados no Firestore.
  * Role padrão: 'citizen'. Admins são promovidos manualmente no console.
  */
-export async function cadastrarUsuario(params: ParamsCadastro): Promise<ResultadoCadastro> {
+export async function cadastrarUsuario(
+  params: ParamsCadastro,
+): Promise<ResultadoCadastro> {
   const { nome, email, senha } = params;
 
   try {
     // 1. Criar conta no Firebase Auth
-    const credencial = await createUserWithEmailAndPassword(auth, email.trim().toLowerCase(), senha);
+    const credencial = await createUserWithEmailAndPassword(
+      auth,
+      email.trim().toLowerCase(),
+      senha,
+    );
     const uid = credencial.user.uid;
 
     // 2. Atualizar displayName (visível no auth.currentUser)
     await updateProfile(credencial.user, { displayName: nome.trim() });
 
     // 3. Salvar documento na coleção 'users' do Firestore
-    await setDoc(doc(db, 'users', uid), {
+    await setDoc(doc(db, "users", uid), {
       uid,
-      nome:  nome.trim(),
+      nome: nome.trim(),
       email: email.trim().toLowerCase(),
-      role:  'citizen' as Role,
+      role: "citizen" as Role,
       createdAt: serverTimestamp(),
     });
 
     return { sucesso: true };
-
   } catch (erro: unknown) {
     const mensagem = traduzirErroFirebase(erro);
     return { sucesso: false, erro: mensagem };
@@ -188,7 +193,10 @@ interface ResultadoLogin {
  *  - 'citizen' → /home  (ou /(app)/home)
  *  - 'admin'   → /painel (ou /(admin)/painel)
  */
-export async function fazerLogin(email: string, senha: string): Promise<ResultadoLogin> {
+export async function fazerLogin(
+  email: string,
+  senha: string,
+): Promise<ResultadoLogin> {
   try {
     const credencial = await signInWithEmailAndPassword(
       auth,
@@ -199,19 +207,18 @@ export async function fazerLogin(email: string, senha: string): Promise<Resultad
     const uid = credencial.user.uid;
 
     // Buscar role no Firestore
-    const snap = await getDoc(doc(db, 'users', uid));
+    const snap = await getDoc(doc(db, "users", uid));
 
     if (!snap.exists()) {
       // Conta existe no Auth mas não no Firestore — situação anômala
       return {
         sucesso: false,
-        erro: 'Conta não encontrada. Entre em contato com a prefeitura.',
+        erro: "Conta não encontrada. Entre em contato com a prefeitura.",
       };
     }
 
     const dados = snap.data() as DadosUsuario;
     return { sucesso: true, role: dados.role };
-
   } catch (erro: unknown) {
     return { sucesso: false, erro: traduzirErroFirebase(erro) };
   }
@@ -238,7 +245,7 @@ export async function obterUsuarioAtual(): Promise<DadosUsuario | null> {
   const usuario = auth.currentUser;
   if (!usuario) return null;
 
-  const snap = await getDoc(doc(db, 'users', usuario.uid));
+  const snap = await getDoc(doc(db, "users", usuario.uid));
   if (!snap.exists()) return null;
 
   return snap.data() as DadosUsuario;
@@ -250,9 +257,9 @@ export async function obterUsuarioAtual(): Promise<DadosUsuario | null> {
  */
 export function primeiroNomeAtual(): string {
   const usuario = auth.currentUser;
-  if (!usuario) return 'Cidadão';
-  const nome = usuario.displayName ?? usuario.email?.split('@')[0] ?? 'Cidadão';
-  return nome.split(' ')[0];
+  if (!usuario) return "Cidadão";
+  const nome = usuario.displayName ?? usuario.email?.split("@")[0] ?? "Cidadão";
+  return nome.split(" ")[0];
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -279,9 +286,9 @@ export function escutarViagensDoCidadao(
   }
 
   const q = query(
-    collection(db, 'trips'),
-    where('userId', '==', usuario.uid),
-    orderBy('createdAt', 'desc'),
+    collection(db, "trips"),
+    where("userId", "==", usuario.uid),
+    orderBy("createdAt", "desc"),
   );
 
   const unsubscribe = onSnapshot(
@@ -289,7 +296,7 @@ export function escutarViagensDoCidadao(
     (snapshot) => {
       const dados: Viagem[] = snapshot.docs.map((d) => ({
         id: d.id,
-        ...(d.data() as Omit<Viagem, 'id'>),
+        ...(d.data() as Omit<Viagem, "id">),
       }));
       onDados(dados);
     },
@@ -304,20 +311,23 @@ export function escutarViagensDoCidadao(
 // ─────────────────────────────────────────────────────────────────────────────
 
 function traduzirErroFirebase(erro: unknown): string {
-  const msg = erro instanceof Error ? erro.message : '';
+  const msg = erro instanceof Error ? erro.message : "";
 
-  if (msg.includes('email-already-in-use'))
-    return 'Este e-mail já está cadastrado.';
-  if (msg.includes('invalid-email'))
-    return 'Formato de e-mail inválido.';
-  if (msg.includes('weak-password'))
-    return 'Senha muito fraca. Use ao menos 6 caracteres.';
-  if (msg.includes('user-not-found') || msg.includes('wrong-password') || msg.includes('invalid-credential'))
-    return 'E-mail ou senha incorretos.';
-  if (msg.includes('too-many-requests'))
-    return 'Muitas tentativas. Tente novamente mais tarde.';
-  if (msg.includes('network-request-failed'))
-    return 'Sem conexão com a internet.';
+  if (msg.includes("email-already-in-use"))
+    return "Este e-mail já está cadastrado.";
+  if (msg.includes("invalid-email")) return "Formato de e-mail inválido.";
+  if (msg.includes("weak-password"))
+    return "Senha muito fraca. Use ao menos 6 caracteres.";
+  if (
+    msg.includes("user-not-found") ||
+    msg.includes("wrong-password") ||
+    msg.includes("invalid-credential")
+  )
+    return "E-mail ou senha incorretos.";
+  if (msg.includes("too-many-requests"))
+    return "Muitas tentativas. Tente novamente mais tarde.";
+  if (msg.includes("network-request-failed"))
+    return "Sem conexão com a internet.";
 
-  return msg || 'Erro desconhecido. Tente novamente.';
+  return msg || "Erro desconhecido. Tente novamente.";
 }
