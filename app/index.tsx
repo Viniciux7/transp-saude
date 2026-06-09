@@ -17,7 +17,10 @@ export default function IndexScreen() {
 
   return (
     <>
-      <StatusBar barStyle="light-content" backgroundColor={COLORS.darkBackground} />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={COLORS.darkBackground}
+      />
 
       <LinearGradient
         colors={[COLORS.oxfordNavy, COLORS.darkBackground]}
@@ -35,7 +38,8 @@ export default function IndexScreen() {
           </View>
 
           <View style={styles.textSection}>
-            <Text style={globalStyles.title}>Transporte São Simão</Text>
+            <Text style={globalStyles.title}>Transporte</Text>
+            <Text style={globalStyles.title}>São Simão</Text>
             <Text style={globalStyles.subtitle}>Nossa cidade em movimento</Text>
             <View style={globalStyles.divider} />
           </View>

@@ -1,79 +1,53 @@
+// app/cadastro.tsx
+// Tela de cadastro: usuário cria uma nova conta.
+// Toda a lógica de validação e Firebase fica no authController.
+
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-    ActivityIndicator,
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { cadastrarUsuario } from "../database/firebase/usuarioService";
+import { cadastroController } from "../controllers/authController";
 import { COLORS, FONTS, SPACING, globalStyles } from "../styles/global-styles";
-
-function validateEmail(email: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
 
 export default function RegisterScreen() {
   const router = useRouter();
 
-  const [name, setName] = useState("");
+  const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [senha, setSenha] = useState("");
+  const [mostrarSenha, setMostrarSenha] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleRegister = async () => {
-    if (!name.trim()) {
-      Alert.alert("Atenção", "Nome é obrigatório.");
-      return;
-    }
-    if (!validateEmail(email)) {
-      Alert.alert("Atenção", "Formato de e-mail incorreto.");
-      return;
-    }
-    if (password.length < 6) {
-      Alert.alert("Atenção", "Senha deve ter pelo menos 6 caracteres.");
-      return;
-    }
-
+  async function handleCadastro() {
     setLoading(true);
-
-    const result = await cadastrarUsuario({
-      nome: name,
-      email,
-      senha: password,
-    });
-
+    const resultado = await cadastroController(nome, email, senha);
     setLoading(false);
 
-    if (!result.sucesso) {
-      Alert.alert("Erro no cadastro", result.erro);
+    if (!resultado.sucesso) {
+      Alert.alert("Erro no cadastro", resultado.erro);
       return;
     }
 
-    Alert.alert(
-      "Cadastro realizado com sucesso!",
-      "Faça login para continuar.",
-      [{ text: "OK", onPress: () => router.replace("/login") }],
-    );
-  };
+    router.replace("/home");
+  }
 
   return (
     <>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor={COLORS.darkBackground}
-      />
+      <StatusBar barStyle="light-content" backgroundColor={COLORS.darkBackground} />
 
       <LinearGradient
         colors={[COLORS.oxfordNavy, COLORS.darkBackground]}
@@ -91,52 +65,34 @@ export default function RegisterScreen() {
               keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
             >
+              {/* Cabeçalho */}
               <View style={styles.header}>
-                <TouchableOpacity
-                  onPress={() => router.back()}
-                  style={styles.backButton}
-                >
-                  <MaterialIcons
-                    name="arrow-back"
-                    size={24}
-                    color={COLORS.white}
-                  />
+                <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+                  <MaterialIcons name="arrow-back" size={24} color={COLORS.white} />
                 </TouchableOpacity>
-
                 <Text style={styles.headerTitle}>Criar conta</Text>
                 <Text style={styles.headerSubtitle}>
                   Preencha seus dados para se cadastrar
                 </Text>
               </View>
 
+              {/* Formulário */}
               <View style={styles.form}>
-                {/* Nome */}
                 <View style={globalStyles.inputWrapper}>
-                  <MaterialIcons
-                    name="person"
-                    size={20}
-                    color={COLORS.coolSteel}
-                    style={globalStyles.inputIcon}
-                  />
+                  <MaterialIcons name="person" size={20} color={COLORS.coolSteel} style={globalStyles.inputIcon} />
                   <TextInput
                     style={globalStyles.input}
                     placeholder="Nome completo *"
                     placeholderTextColor={COLORS.coolSteel}
-                    value={name}
-                    onChangeText={setName}
+                    value={nome}
+                    onChangeText={setNome}
                     autoCapitalize="words"
                     autoCorrect={false}
                   />
                 </View>
 
-                {/* Email */}
                 <View style={globalStyles.inputWrapper}>
-                  <MaterialIcons
-                    name="email"
-                    size={20}
-                    color={COLORS.coolSteel}
-                    style={globalStyles.inputIcon}
-                  />
+                  <MaterialIcons name="email" size={20} color={COLORS.coolSteel} style={globalStyles.inputIcon} />
                   <TextInput
                     style={globalStyles.input}
                     placeholder="E-mail *"
@@ -149,53 +105,38 @@ export default function RegisterScreen() {
                   />
                 </View>
 
-                {/* Senha */}
                 <View style={globalStyles.inputWrapper}>
-                  <MaterialIcons
-                    name="lock"
-                    size={20}
-                    color={COLORS.coolSteel}
-                    style={globalStyles.inputIcon}
-                  />
+                  <MaterialIcons name="lock" size={20} color={COLORS.coolSteel} style={globalStyles.inputIcon} />
                   <TextInput
                     style={globalStyles.input}
                     placeholder="Senha (mínimo 6 caracteres) *"
                     placeholderTextColor={COLORS.coolSteel}
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry={!showPassword}
+                    value={senha}
+                    onChangeText={setSenha}
+                    secureTextEntry={!mostrarSenha}
                   />
-                  <TouchableOpacity
-                    onPress={() => setShowPassword(!showPassword)}
-                  >
+                  <TouchableOpacity onPress={() => setMostrarSenha(!mostrarSenha)}>
                     <MaterialIcons
-                      name={showPassword ? "visibility-off" : "visibility"}
+                      name={mostrarSenha ? "visibility-off" : "visibility"}
                       size={20}
                       color={COLORS.coolSteel}
                     />
                   </TouchableOpacity>
                 </View>
 
-                {/* Botão */}
                 <TouchableOpacity
-                  style={[
-                    globalStyles.buttonPrimary,
-                    loading && { opacity: 0.7 },
-                  ]}
-                  onPress={handleRegister}
+                  style={[globalStyles.buttonPrimary, loading && { opacity: 0.7 }]}
+                  onPress={handleCadastro}
                   disabled={loading}
                   activeOpacity={0.8}
                 >
                   {loading ? (
                     <ActivityIndicator color={COLORS.inkBlack} />
                   ) : (
-                    <Text style={globalStyles.buttonPrimaryText}>
-                      Criar conta
-                    </Text>
+                    <Text style={globalStyles.buttonPrimaryText}>Criar conta</Text>
                   )}
                 </TouchableOpacity>
 
-                {/* Link para login */}
                 <TouchableOpacity onPress={() => router.push("/login")}>
                   <Text style={globalStyles.linkText}>
                     Já tem conta? <Text style={styles.linkBold}>Entrar</Text>

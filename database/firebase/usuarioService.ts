@@ -90,14 +90,17 @@ import {
     updateProfile,
 } from "firebase/auth";
 import {
+    addDoc,
     collection,
     doc,
     getDoc,
+    getDocs,
     onSnapshot,
     orderBy,
     query,
     serverTimestamp,
     setDoc,
+    updateDoc,
     where,
 } from "firebase/firestore";
 import { auth, db } from "./firebaseConfig"; // ajuste o caminho se necessário
@@ -119,10 +122,14 @@ export type StatusViagem = "pending" | "confirmed" | "rejected";
 
 export interface Viagem {
   id: string;
-  dataViagem: string;
-  destino: string;
-  acompanhante: boolean;
-  observacao: string;
+  nomePaciente: string;
+  dataNascPaciente: string;
+  nomeAcompanhante: string;
+  dataNascAcompanhante: string;
+  hospital: string;
+  pontoEmbarque: string;
+  veiculo: "onibus" | "van";
+  horario: string;
   status: StatusViagem;
 }
 
@@ -234,6 +241,50 @@ export async function fazerLogout(): Promise<void> {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// VIAGENS
+// ─────────────────────────────────────────────────────────────────────────────
+
+type ResultadoSimples = { sucesso: true } | { sucesso: false; erro: string };
+
+/** Salva uma nova solicitação de transporte na coleção 'trips'. */
+export async function cadastrarViagem(
+  dados: Omit<Viagem, "id" | "status">,
+): Promise<ResultadoSimples> {
+  const usuario = auth.currentUser;
+  if (!usuario) return { sucesso: false, erro: "Usuário não autenticado." };
+
+  try {
+    await addDoc(collection(db, "trips"), {
+      ...dados,
+      userId: usuario.uid,
+      status: "pending",
+      createdAt: serverTimestamp(),
+    });
+    return { sucesso: true };
+  } catch {
+    return { sucesso: false, erro: "Erro ao salvar solicitação. Tente novamente." };
+  }
+}
+
+/** Retorna a quantidade de vagas já ocupadas (status != rejected) para um veículo+horário. */
+export async function contarVagasOcupadas(
+  veiculo: "onibus" | "van",
+  horario: string,
+): Promise<number> {
+  try {
+    const q = query(
+      collection(db, "trips"),
+      where("veiculo", "==", veiculo),
+      where("horario", "==", horario),
+    );
+    const snap = await getDocs(q);
+    return snap.docs.filter((d) => d.data().status !== "rejected").length;
+  } catch {
+    return 0;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // DADOS DO USUÁRIO ATUAL
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -304,6 +355,38 @@ export function escutarViagensDoCidadao(
   );
 
   return unsubscribe;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ADMIN
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Listener em tempo real de TODAS as viagens (uso exclusivo do admin). */
+export function escutarTodasViagens(
+  onDados: (viagens: Viagem[]) => void,
+  onErro: (erro: Error) => void,
+): () => void {
+  const q = query(collection(db, "trips"), orderBy("createdAt", "desc"));
+
+  return onSnapshot(
+    q,
+    (snapshot) => {
+      const dados: Viagem[] = snapshot.docs.map((d) => ({
+        id: d.id,
+        ...(d.data() as Omit<Viagem, "id">),
+      }));
+      onDados(dados);
+    },
+    (erro) => onErro(erro),
+  );
+}
+
+/** Atualiza o status de uma viagem (pending → confirmed | rejected). */
+export async function atualizarStatusViagem(
+  id: string,
+  status: StatusViagem,
+): Promise<void> {
+  await updateDoc(doc(db, "trips", id), { status });
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

@@ -1,31 +1,26 @@
-/**
- * app/login.tsx (ou screens/login.tsx — ajuste conforme sua estrutura)
- *
- * Fluxo:
- *  1. Usuário digita e-mail e senha
- *  2. fazerLogin() autentica no Firebase e retorna o role
- *  3. Redirecionamos: citizen → /home | admin → /painel
- */
+// app/login.tsx
+// Tela de login: usuário digita e-mail e senha e entra no app.
+// Toda a lógica de validação e Firebase fica no authController.
 
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-    ActivityIndicator,
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { fazerLogin } from "../database/firebase/usuarioService"; // ← serviço com Firebase
+import { loginController } from "../controllers/authController";
 import { COLORS, FONTS, SPACING, globalStyles } from "../styles/global-styles";
 
 export default function LoginScreen() {
@@ -36,14 +31,9 @@ export default function LoginScreen() {
   const [mostrarSenha, setMostrarSenha] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async () => {
-    if (!email.trim() || !senha.trim()) {
-      Alert.alert("Atenção", "Preencha todos os campos.");
-      return;
-    }
-
+  async function handleLogin() {
     setLoading(true);
-    const resultado = await fazerLogin(email, senha);
+    const resultado = await loginController(email, senha);
     setLoading(false);
 
     if (!resultado.sucesso) {
@@ -52,19 +42,12 @@ export default function LoginScreen() {
     }
 
     // Redireciona conforme o perfil do usuário
-    if (resultado.role === "admin") {
-      router.replace("/painel" as any);
-    } else {
-      router.replace("/home");
-    }
-  };
+    router.replace(resultado.role === "admin" ? ("/painel" as any) : "/home");
+  }
 
   return (
     <>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor={COLORS.darkBackground}
-      />
+      <StatusBar barStyle="light-content" backgroundColor={COLORS.darkBackground} />
 
       <LinearGradient
         colors={[COLORS.oxfordNavy, COLORS.darkBackground]}
@@ -81,35 +64,21 @@ export default function LoginScreen() {
               contentContainerStyle={styles.scrollContent}
               keyboardShouldPersistTaps="handled"
             >
-              {/* ── Header ──────────────────────────────────────────────── */}
+              {/* Cabeçalho */}
               <View style={styles.header}>
-                <TouchableOpacity
-                  onPress={() => router.back()}
-                  style={styles.backButton}
-                >
-                  <MaterialIcons
-                    name="arrow-back"
-                    size={24}
-                    color={COLORS.white}
-                  />
+                <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+                  <MaterialIcons name="arrow-back" size={24} color={COLORS.white} />
                 </TouchableOpacity>
-
                 <Text style={styles.headerTitle}>Entrar</Text>
                 <Text style={styles.headerSubtitle}>
                   Acesse sua conta para solicitar transporte
                 </Text>
               </View>
 
-              {/* ── Formulário ─────────────────────────────────────────── */}
+              {/* Formulário */}
               <View style={styles.form}>
-                {/* E-mail */}
                 <View style={globalStyles.inputWrapper}>
-                  <MaterialIcons
-                    name="email"
-                    size={20}
-                    color={COLORS.coolSteel}
-                    style={globalStyles.inputIcon}
-                  />
+                  <MaterialIcons name="email" size={20} color={COLORS.coolSteel} style={globalStyles.inputIcon} />
                   <TextInput
                     style={globalStyles.input}
                     placeholder="E-mail"
@@ -122,14 +91,8 @@ export default function LoginScreen() {
                   />
                 </View>
 
-                {/* Senha */}
                 <View style={globalStyles.inputWrapper}>
-                  <MaterialIcons
-                    name="lock"
-                    size={20}
-                    color={COLORS.coolSteel}
-                    style={globalStyles.inputIcon}
-                  />
+                  <MaterialIcons name="lock" size={20} color={COLORS.coolSteel} style={globalStyles.inputIcon} />
                   <TextInput
                     style={globalStyles.input}
                     placeholder="Senha"
@@ -138,9 +101,7 @@ export default function LoginScreen() {
                     onChangeText={setSenha}
                     secureTextEntry={!mostrarSenha}
                   />
-                  <TouchableOpacity
-                    onPress={() => setMostrarSenha(!mostrarSenha)}
-                  >
+                  <TouchableOpacity onPress={() => setMostrarSenha(!mostrarSenha)}>
                     <MaterialIcons
                       name={mostrarSenha ? "visibility-off" : "visibility"}
                       size={20}
@@ -149,12 +110,8 @@ export default function LoginScreen() {
                   </TouchableOpacity>
                 </View>
 
-                {/* Botão entrar */}
                 <TouchableOpacity
-                  style={[
-                    globalStyles.buttonPrimary,
-                    loading && { opacity: 0.7 },
-                  ]}
+                  style={[globalStyles.buttonPrimary, loading && { opacity: 0.7 }]}
                   onPress={handleLogin}
                   disabled={loading}
                   activeOpacity={0.8}
@@ -166,7 +123,6 @@ export default function LoginScreen() {
                   )}
                 </TouchableOpacity>
 
-                {/* Link cadastro */}
                 <TouchableOpacity onPress={() => router.push("/cadastro")}>
                   <Text style={globalStyles.linkText}>
                     Não tem conta?{" "}

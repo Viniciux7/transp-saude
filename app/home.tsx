@@ -48,6 +48,11 @@ const statusConfig: Record<
 // COMPONENTE: Card de Viagem
 // ─────────────────────────────────────────────────────────────────────────────
 
+const veiculoLabel: Record<string, string> = {
+  onibus: "Ônibus",
+  van: "Van",
+};
+
 function CardViagem({ viagem }: { viagem: Viagem }) {
   const config =
     statusConfig[viagem.status as StatusViagem] ?? statusConfig.pending;
@@ -58,12 +63,10 @@ function CardViagem({ viagem }: { viagem: Viagem }) {
       <View style={cardStyles.corpo}>
         <View style={cardStyles.topo}>
           <View style={{ flex: 1 }}>
-            <Text style={cardStyles.destino}>{viagem.destino}</Text>
-            <Text style={cardStyles.data}>{viagem.dataViagem}</Text>
+            <Text style={cardStyles.destino}>{viagem.nomePaciente}</Text>
+            <Text style={cardStyles.data}>{viagem.hospital}</Text>
           </View>
-          <View
-            style={[cardStyles.badge, { backgroundColor: config.cor + "20" }]}
-          >
+          <View style={[cardStyles.badge, { backgroundColor: config.cor + "20" }]}>
             <MaterialIcons name={config.icone} size={12} color={config.cor} />
             <Text style={[cardStyles.badgeText, { color: config.cor }]}>
               {config.label}
@@ -71,17 +74,20 @@ function CardViagem({ viagem }: { viagem: Viagem }) {
           </View>
         </View>
 
-        {viagem.acompanhante && (
+        <View style={cardStyles.acompanhanteTag}>
+          <MaterialIcons name="directions-bus" size={12} color="#6B7280" />
+          <Text style={cardStyles.acompanhanteText}>
+            {veiculoLabel[viagem.veiculo] ?? viagem.veiculo} · {viagem.horario}
+          </Text>
+        </View>
+
+        {!!viagem.nomeAcompanhante && (
           <View style={cardStyles.acompanhanteTag}>
             <MaterialIcons name="people" size={12} color="#6B7280" />
-            <Text style={cardStyles.acompanhanteText}>Com acompanhante</Text>
+            <Text style={cardStyles.acompanhanteText}>
+              Acompanhante: {viagem.nomeAcompanhante}
+            </Text>
           </View>
-        )}
-
-        {!!viagem.observacao && (
-          <Text style={cardStyles.observacao} numberOfLines={2}>
-            {viagem.observacao}
-          </Text>
         )}
       </View>
     </View>
@@ -170,22 +176,13 @@ export default function HomeScreen() {
   }, []);
 
   // ── Logout ───────────────────────────────────────────────────────────────
-  function handleSair() {
-    Alert.alert("Sair", "Deseja encerrar a sessão?", [
-      { text: "Cancelar", style: "cancel" },
-      {
-        text: "Sair",
-        style: "destructive",
-        onPress: async () => {
-          try {
-            await fazerLogout();
-            router.replace("/");
-          } catch {
-            Alert.alert("Erro", "Não foi possível sair. Tente novamente.");
-          }
-        },
-      },
-    ]);
+  async function handleSair() {
+    try {
+      await fazerLogout();
+      router.replace("/");
+    } catch {
+      Alert.alert("Erro", "Não foi possível sair. Tente novamente.");
+    }
   }
 
   return (
@@ -207,23 +204,13 @@ export default function HomeScreen() {
 
       {/* ── Conteúdo ────────────────────────────────────────────────────── */}
       <View style={styles.conteudo}>
-        {/* Botões de ação */}
+        {/* Botão de ação */}
         <TouchableOpacity
           style={globalStyles.buttonPrimary}
           activeOpacity={0.8}
-          onPress={() => router.push("/pacientes")}
+          onPress={() => router.push("/transportes" as any)}
         >
-          <Text style={globalStyles.buttonPrimaryText}>Cadastrar paciente</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[globalStyles.buttonPrimary, { marginTop: SPACING.sm }]}
-          activeOpacity={0.8}
-          onPress={() => router.push("/transporte" as any)}
-        >
-          <Text style={globalStyles.buttonPrimaryText}>
-            Cadastrar transporte
-          </Text>
+          <Text style={globalStyles.buttonPrimaryText}>Cadastrar Transporte</Text>
         </TouchableOpacity>
 
         {/* ── Minhas Viagens ────────────────────────────────────────────── */}
