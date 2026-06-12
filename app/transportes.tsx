@@ -41,6 +41,22 @@ const HOSPITAIS_ONIBUS = [
 
 const HOSPITAIS_VAN = [...HOSPITAIS_ONIBUS, "Outro hospital"];
 
+
+/** Aplica máscara DD/MM/AAAA enquanto o usuário digita */
+function mascaraData(valor: string): string {
+  const d = valor.replace(/\D/g, "");
+  if (d.length <= 2) return d;
+  if (d.length <= 4) return `${d.slice(0, 2)}/${d.slice(2)}`;
+  return `${d.slice(0, 2)}/${d.slice(2, 4)}/${d.slice(4, 8)}`;
+}
+
+/** Retorna true se a string contém uma data completa (8 dígitos) */
+function dataCompleta(valor: string): boolean {
+  return valor.replace(/\D/g, "").length === 8;
+}
+
+
+
 export default function TransportesScreen() {
   const router = useRouter();
 
@@ -78,6 +94,24 @@ export default function TransportesScreen() {
   const hospitalFinal = hospital === "Outro hospital" ? outroHospital : hospital;
 
   async function handleSolicitar() {
+    // Validações antecipadas (antes de chamar o controller)
+    if (!veiculo) {
+      Alert.alert("Atenção", "Selecione o veículo.");
+      return;
+    }
+    if (!horario) {
+      Alert.alert("Atenção", "Selecione o horário.");
+      return;
+    }
+    if (!dataCompleta(dataNascPaciente)) {
+      Alert.alert("Data inválida", "Informe a data de nascimento do paciente no formato DD/MM/AAAA.");
+      return;
+    }
+    if (nomeAcompanhante.trim() && !dataCompleta(dataNascAcompanhante)) {
+      Alert.alert("Data inválida", "Informe a data de nascimento do acompanhante no formato DD/MM/AAAA.");
+      return;
+    }
+
     setLoading(true);
     const resultado = await transporteController({
       nomePaciente,
@@ -86,8 +120,8 @@ export default function TransportesScreen() {
       dataNascAcompanhante,
       hospital: hospitalFinal,
       pontoEmbarque,
-      veiculo: veiculo!,
-      horario: horario!,
+      veiculo,
+      horario,
     });
     setLoading(false);
 
@@ -147,6 +181,7 @@ export default function TransportesScreen() {
                   />
                 </View>
 
+                {/* Máscara aplicada: onChangeText passa pelo mascaraData antes de setar */}
                 <View style={globalStyles.inputWrapper}>
                   <MaterialIcons name="cake" size={20} color={COLORS.coolSteel} style={globalStyles.inputIcon} />
                   <TextInput
@@ -154,7 +189,7 @@ export default function TransportesScreen() {
                     placeholder="Data de nascimento (DD/MM/AAAA) *"
                     placeholderTextColor={COLORS.coolSteel}
                     value={dataNascPaciente}
-                    onChangeText={setDataNascPaciente}
+                    onChangeText={(t) => setDataNascPaciente(mascaraData(t))}
                     keyboardType="numeric"
                     maxLength={10}
                   />
@@ -184,7 +219,7 @@ export default function TransportesScreen() {
                     placeholder="Data de nascimento do acompanhante"
                     placeholderTextColor={COLORS.coolSteel}
                     value={dataNascAcompanhante}
-                    onChangeText={setDataNascAcompanhante}
+                    onChangeText={(t) => setDataNascAcompanhante(mascaraData(t))}
                     keyboardType="numeric"
                     maxLength={10}
                   />
